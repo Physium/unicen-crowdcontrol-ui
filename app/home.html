@@ -1,0 +1,305 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>unicern</title>
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap-table/src/bootstrap-table.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="/bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+    <!--CDN Scripts-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!--end CDN Scripts-->
+</head>
+
+<body>
+    <!--[if lt IE 10]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+        <h3 class="text-muted">UNiCEN</h3>
+    </div>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>'Allo, 'Allo!</h1>
+            <p class="lead">This placeholder text should change!</p>
+        </div>
+        <div class="row tag-box tag-box-v3">
+            <h3> Simulation Results </h3>
+            <ul class="nav nav-tabs nav-rtl">
+                <li id="simulationTableTab">
+                  <a href="#tab_actions_pending" data-toggle="tab" aria-expanded="false"> Data </a>
+                </ii>
+                <li id="simulationEvacuationChartTab">
+                  <a href="tab_actions_pending" data-toggle="tab" aria-expanded="false"> Evacuation Chart</a>
+                </li>
+                <li class="active" id="simulationChartTab">
+                  <a href="#tab_actions_complete" data-toggle="tab" aria-expanded="false"> Chart </a>
+                </li>
+            </ul>
+            <!--simulation placeholder chart-->
+            <div id="simulation">
+            </div>
+            <!--END simulation placeholder chart-->
+        </div>
+        <div class="row marketing">
+            <div class="col-lg-12">
+                <!--Communication Testing Protocol-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Communication Testing Protocol
+                    </div>
+                    <div class="panel-body">
+                        <section>
+                            <!--Test Protocol-->
+                            <label>
+                                Click for server status
+                            </label>
+                            <div>
+                                <button id="test" class="btn btn-md btn-success">Test!</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <!--End Communication Testing Protocol-->
+                <!--Basic Start Stop Features-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Basic Features <code>work in progress</code>
+                    </div>
+                    <div class="panel-body">
+                        <label>
+                            Run Simulation
+                        </label>
+                        <div>
+                            <button id="start" class="btn btn-md btn-success">Start <span class="glyphicon glyphicon-play"></span></button>
+                            <button id="stop" class="btn btn-md btn-success">Stop <span class="glyphicon glyphicon-stop"></span></button>
+                            <button class="btn btn-md btn-success">Reset <span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </div>
+                </div>
+                <!--End Basic Start Stop Features-->
+                <!--Parameter Inputs-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Parameter Inputs <code>work in progress</code>
+                    </div>
+                    <div class="panel-body">
+                        <div id="building" class="field">
+                            <label>Building:</label>
+                            <select class="js-example-basic-single" style="width:100%">
+                                <option value="SUNTEC-EXH">SUNTEC-EXH Building</option>
+                            </select>
+                        </div>
+                        <div id="location" class="field">
+                            <label>Start Location:</label>
+                            <select class="js-example-basic-single" style="width:100%">
+                                <option value="601-602">601-602</option>
+                                <option value="603-604">603-604</option>
+                                <option value="605">605</option>
+                                <option value="606">606</option>
+                                <option value="606A">606A</option>
+                                <option value="606B">606B</option>
+                                <option value="606C">606C</option>
+                                <option value="606D">606D</option>
+                                <option value="606E">606E</option>
+                                <option value="HALL-401">HALL-401</option>
+                                <option value="HALL-402">HALL-402</option>
+                                <option value="HALL-403">HALL-403</option>
+                                <option value="HALL-404">HALL-404</option>
+                                <option value="HALL-405">HALL-405</option>
+                                <option value="HALL-406">HALL-406</option>
+                                <option value="MR-300">MR-300</option>
+                                <option value="MR-301">MR-301</option>
+                                <option value="MR-302">MR-302</option>
+                                <option value="MR-303">MR-303</option>
+                                <option value="MR-304">MR-304</option>
+                                <option value="MR-305">MR-305</option>
+                                <option value="MR-306">MR-306</option>
+                                <option value="MR-307">MR-307</option>
+                                <option value="MR-308">MR-308</option>
+                                <option value="MR-309">MR-309</option>
+                                <option value="MR-310">MR-310</option>
+                                <option value="MR-311">MR-311</option>
+                            </select>
+                        </div>
+                        <div id="time" class="field">
+                            <label>Start Time</label>
+                            <div class='input-group date' id='datetimepicker3'>
+                                <input type='text' class="form-control" placeholder="HH:mm" />
+                                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div id="crowd" class="field">
+                            <label>Crowd:</label>
+                            <select class="js-example-basic-single" style="width:100%">
+                                <option value="RANDOM">RANDOM</option>
+                                <option value="REPLAY">REPLAY</option>
+                                <option value="AllLevelsAllModes">AllLevelsAllModes</option>
+                                <option value="AllLevelAllMalls">AllLevelAllMalls</option>
+                                <option value="AllLevelAllTrain">AllLevelAllTrain</option>
+                                <option value="AllLevelsAllBusTaxi">AllLevelsAllBusTaxi</option>
+                                <option value="Level6AllBusTaxi">Level6AllBusTaxi</option>
+                                <option value="Level6AllMalls">Level6AllMalls</option>
+                                <option value="Level6AllTrain">Level6AllTrain</option>
+                                <option value="Level4AllModes">Level4AllModes</option>
+                                <option value="Level4AllMalls">Level4AllMalls</option>
+                                <option value="Level4AllTrain">Level4AllTrain</option>
+                                <option value="Level4AllBusTaxi">Level4AllBusTaxi</option>
+                                <option value="Level3AllModes">Level3AllModes</option>
+                                <option value="Level3AllMalls">Level3AllMalls</option>
+                                <option value="Level3AllTrain">Level3AllTrain</option>
+                                <option value="Level3AllBusTaxi">Level3AllBusTaxi</option>
+                            </select>
+                        </div>
+                        <div id="information" class="field">
+                          <label>Information:</label>
+                          <select class="js-example-basic-single" style="width:100%">
+                              <option value="PARTIAL">PARTIAL</option>
+                              <option value="COMPLETE">COMPLETE</option>
+                          </select>
+                        </div>
+                        <div id="path" class="field">
+                          <label>Path finding:</label>
+                          <select class="js-example-basic-single" style="width:100%">
+                              <option value="SUNTEC-EXH">NAIVE</option>
+                              <option value="ADAPTIVE">ADAPTIVE</option>
+                              <option value="ONETIME">ONETIME</option>
+                          </select>
+                        </div>
+                        <div id="lift" class="field">
+                            <label>Activated Lift:</label>
+                            <select multiple="multiple" class="js-example-basic-single" style="width:100%">
+                                <option value="Lift 1 @ Floor 0">Lift 1 @ Floor 0</option>
+                                <option value="Lift 2 @ Floor 0">Lift 2 @ Floor 0</option>
+                                <option value="Lift 3 @ Floor 0">Lift 3 @ Floor 0</option>
+                                <option value="Lift 4 @ Floor 0">Lift 4 @ Floor 0</option>
+                                <option value="Lift 5 @ Floor 0">Lift 5 @ Floor 0</option>
+                                <option value="Lift 6 @ Floor 0">Lift 6 @ Floor 0</option>
+                            </select>
+                            <!--<div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="Activated">Activated</label>
+                            </div>-->
+                        </div>
+                        <div id="escalator" class="field">
+                            <label>Activated Escalator:</label>
+                            <select multiple="multiple" class="js-example-basic-single" style="width:100%">
+                                <option value="Stair id 0 @ level 0">Stair id 0 @ level 0</option>
+                                <option value="Stair id 1 @ level 0">Stair id 1 @ level 0</option>
+                                <option value="Stair id 2 @ level 0">Stair id 2 @ level 0</option>
+                                <option value="Stair id 3 @ level 0">Stair id 3 @ level 0</option>
+                                <option value="Stair id 0 @ level 2">Stair id 0 @ level 2</option>
+                                <option value="Stair id 1 @ level 2">Stair id 1 @ level 2</option>
+                                <option value="Stair id 2 @ level 2">Stair id 2 @ level 2</option>
+                                <option value="Stair id 3 @ level 2">Stair id 3 @ level 2</option>
+                                <option value="Stair id 4 @ level 2">Stair id 4 @ level 2</option>
+                                <option value="Stair id 5 @ level 2">Stair id 5 @ level 2</option>
+                                <option value="Stair id 6 @ level 2">Stair id 6 @ level 2</option>
+                                <option value="Stair id 7 @ level 2">Stair id 7 @ level 2</option>
+                                <option value="Stair id 8 @ level 2">Stair id 8 @ level 2</option>
+                                <option value="Stair id 9 @ level 2">Stair id 9 @ level 2</option>
+                                <option value="Stair id 0 @ level 3">Stair id 0 @ level 3</option>
+                                <option value="Stair id 1 @ level 3">Stair id 1 @ level 3</option>
+                                <option value="Stair id 2 @ level 3">Stair id 2 @ level 3</option>
+                                <option value="Stair id 3 @ level 3">Stair id 3 @ level 3</option>
+                                <option value="Stair id 4 @ level 3">Stair id 4 @ level 3</option>
+                                <option value="Stair id 5 @ level 3">Stair id 5 @ level 3</option>
+                                <option value="Stair id 0 @ level 5">Stair id 0 @ level 5</option>
+                                <option value="Stair id 1 @ level 5">Stair id 1 @ level 5</option>
+                            </select>
+                            <!--<div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="Activated">Activated</label>
+                            </div>-->
+                        </div>
+                        <div id="access" class="field">
+                            <label>Activated Access Point:</label>
+                            <select multiple="multiple" class="js-example-basic-single" style="width:100%">
+                                <option value="Door 0 @ Floor 0">Door 0 @ Floor 0</option>
+                                <option value="Door 1 @ Floor 2">Door 1 @ Floor 2</option>
+                            </select>
+                            <!--<div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="Activated">Activated</label>
+                            </div>-->
+                        </div>
+                        <button id="run" class="btn btn-md btn-success">Submit</button>
+                    </div>
+                </div>
+                <!--End Parameter Inputs-->
+            </div>
+            <!--col12-->
+        </div>
+    </div>
+    <!--cointainer-->
+    <div class="footer">
+        <p>♥ from the Yeoman team</p>
+    </div>
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+    (function(b, o, i, l, e, r) {
+        b.GoogleAnalyticsObject = l;
+        b[l] || (b[l] =
+            function() {
+                (b[l].q = b[l].q || []).push(arguments)
+            });
+        b[l].l = +new Date;
+        e = o.createElement(i);
+        r = o.getElementsByTagName(i)[0];
+        e.src = 'https://www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e, r)
+    }(window, document, 'script', 'ga'));
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+    </script>
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/select2/dist/js/select2.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
+    <script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/bower_components/bootstrap-table/src/bootstrap-table.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js scripts/plugins.js -->
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+    <!-- endbuild -->
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
+</body>
+
+</html>

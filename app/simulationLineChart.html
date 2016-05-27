@@ -1,0 +1,44 @@
+<script type="text/javascript">
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('number', 'Ticks');
+    data.addColumn('number', 'Agent Level 1');
+    data.addColumn('number', 'Agent Level 2');
+    data.addColumn('number', 'Agent Level 3');
+    data.addColumn('number', 'Agent Level 4');
+    data.addColumn('number', 'Agent Level 5');
+    data.addColumn('number', 'Agent Level 6');
+
+    data.addRows([
+      [1,  37.8, 80.8, 41.8,  4.2,  6.2,  3.4],
+      [2,  30.9, 69.5, 32.4,  4.8,  6.3,  3.6],
+      [3,  25.4,   57, 25.7,  6.6,  8.4,  5.2],
+      [4,  11.7, 18.8, 10.5,  5.3,  7.9,  4.7],
+      [5,  11.9, 17.6, 10.4,  12.8, 30.9, 11.6],
+      [6,   8.8, 13.6,  7.7,  16.9, 42.9, 14.8],
+      [7,   7.6, 12.3,  9.6,  12.3, 29.2, 10.6],
+      [8,  12.3, 29.2, 10.6,  7.6, 12.3,  9.6],
+      [9,  16.9, 42.9, 14.8,  8.8, 13.6,  7.7],
+      [10, 12.8, 30.9, 11.6,  11.9, 17.6, 10.4],
+      [11,  5.3,  7.9,  4.7,  11.7, 18.8, 10.5],
+      [12,  6.6,  8.4,  5.2,  25.4,   57, 25.7],
+      [13,  4.8,  6.3,  3.6,  30.9, 69.5, 32.4],
+      [14,  4.2,  6.2,  3.4,  37.8, 80.8, 41.8]
+    ]);
+
+    var options = {
+      chart: {
+        title: 'Simulation Line Graph',
+        subtitle: 'Agent each floor'
+      }
+    };
+
+  var chart = new google.charts.Line(document.getElementById('simulationChart'));
+
+  chart.draw(data, options);
+  }
+</script>
+<div id="simulationChart" style="height:400px"></div>
