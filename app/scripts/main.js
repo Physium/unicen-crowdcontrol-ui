@@ -3,6 +3,7 @@ google.charts.load('current', {'packages':['line','corechart']});
 var urlStatus = 'http://unicern-rpc-03:8080/SimulatorControl/?command=status';
 var urlStart = 'http://unicern-rpc-03:8080/SimulatorControl/?command=start';
 var urlStop = 'http://unicern-rpc-03:8080/SimulatorControl/?command=stop';
+var urlData = 'http://unicern-rpc-03:8080/SimulatorControl/?command=getPercentileData';
 //10.1.12.68
 
 
@@ -113,10 +114,42 @@ $(document).ready(function(){
 	    output["crowd"] = crowd;
 	    output["information"] = information;
 	    output["path"] = path;
-	    output["activatedLift"] = lift;
-	    output["activatedEscalator"] = escalator;
-	    output["activatedAccess"] = access;
+	    output["activatedLift"] = [];
+	    output["activatedEscalator"] = [];
+	    output["activatedAccess"] = [];
+	    $("#escalator option").each(function() {
+	    	console.log($(this).val());
+	    	if(escalator){
+		    	if(escalator.indexOf($(this).val()) == -1){
+		    		output["activatedEscalator"].push($(this).val());
+		    	}
+	    	}else{
+	    		output["activatedEscalator"].push($(this).val());
+	    	}
+		});
 
+		$("#lift option").each(function() {
+	    	//console.log($(this).val());
+	    	if(lift){
+		    	if(lift.indexOf($(this).val()) == -1){
+		    		output["activatedLift"].push($(this).val());
+		    	}
+	    	}else{
+	    		output["activatedLift"].push($(this).val());
+	    	}
+		});
+
+		$("#access option").each(function() {
+	    	//console.log($(this).val());
+	    	if(access){
+		    	if(access.indexOf($(this).val()) == -1){
+		    		output["activatedAccess"].push($(this).val());
+		    	}
+	    	}else{
+	    		output["activatedAccess"].push($(this).val());
+	    	}
+		});
+		    //optionValues.push($(this).val());
 	    /*
 	    sample output
 	    {  
@@ -137,7 +170,6 @@ $(document).ready(function(){
 		   ]
 		}
 	    */
-
 	    console.log(JSON.stringify(output));
 	    var jsonOutput = JSON.stringify(output);
 	    $.ajax({
