@@ -22,6 +22,19 @@
     <!-- endbuild -->
     <!--CDN Scripts-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCcNN8qymQ-aNC35QaWpzzjcsbOPzj3f3A",
+        authDomain: "project-5418266603525971336.firebaseapp.com",
+        databaseURL: "https://project-5418266603525971336.firebaseio.com",
+        storageBucket: "",
+    };
+    firebase.initializeApp(config);
+    var database = firebase.database();
+    //console.log(database.ref('/simulation'));
+    </script>
     <!--end CDN Scripts-->
 </head>
 
@@ -46,14 +59,14 @@
             <h3> Simulation Results </h3>
             <ul class="nav nav-tabs nav-rtl">
                 <li id="simulationTableTab">
-                  <a href="#tab_actions_pending" data-toggle="tab" aria-expanded="false"> Data </a>
-                </ii>
-                <li id="simulationEvacuationChartTab">
-                  <a href="tab_actions_pending" data-toggle="tab" aria-expanded="false"> Evacuation Chart</a>
-                </li>
-                <li class="active" id="simulationChartTab">
-                  <a href="#tab_actions_complete" data-toggle="tab" aria-expanded="false"> Chart </a>
-                </li>
+                    <a href="#tab_actions_pending" data-toggle="tab" aria-expanded="false"> Data </a>
+                    </ii>
+                    <li id="simulationEvacuationChartTab">
+                        <a href="tab_actions_pending" data-toggle="tab" aria-expanded="false"> Evacuation Chart</a>
+                    </li>
+                    <li class="active" id="simulationChartTab">
+                        <a href="#tab_actions_complete" data-toggle="tab" aria-expanded="false"> Chart </a>
+                    </li>
             </ul>
             <!--simulation placeholder chart-->
             <div id="simulation">
@@ -173,19 +186,19 @@
                             </select>
                         </div>
                         <div id="information" class="field">
-                          <label>Information:</label>
-                          <select class="js-example-basic-single" style="width:100%">
-                              <option value="PARTIAL">PARTIAL</option>
-                              <option value="COMPLETE">COMPLETE</option>
-                          </select>
+                            <label>Information:</label>
+                            <select class="js-example-basic-single" style="width:100%">
+                                <option value="PARTIAL">PARTIAL</option>
+                                <option value="COMPLETE">COMPLETE</option>
+                            </select>
                         </div>
                         <div id="path" class="field">
-                          <label>Path finding:</label>
-                          <select class="js-example-basic-single" style="width:100%">
-                              <option value="SUNTEC-EXH">NAIVE</option>
-                              <option value="ADAPTIVE">ADAPTIVE</option>
-                              <option value="ONETIME">ONETIME</option>
-                          </select>
+                            <label>Path finding:</label>
+                            <select class="js-example-basic-single" style="width:100%">
+                                <option value="SUNTEC-EXH">NAIVE</option>
+                                <option value="ADAPTIVE">ADAPTIVE</option>
+                                <option value="ONETIME">ONETIME</option>
+                            </select>
                         </div>
                         <div id="lift" class="field">
                             <label>Deactivated Lift:</label>
@@ -300,6 +313,7 @@
     <!-- build:js scripts/main.js -->
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
+
 </body>
 
 </html>

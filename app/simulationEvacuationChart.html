@@ -1,46 +1,34 @@
 <script type="text/javascript">
-  google.charts.setOnLoadCallback(drawChart);
+google.charts.setOnLoadCallback(drawChart);
 
-  function drawChart() {
+function drawChart() {
 
-    var data = new google.visualization.DataTable();
-    data.addColumn('number', 'Percentile');
-    data.addColumn('number', 'Simulation 1');
+    $.get(urlData, function(result) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Percentile');
+        data.addColumn('number', 'Simulation 1');
+        var output = [];
+        //console.log(result);
+        for (var i = 0; i < result['results'].length; i++) {
+            //console.log(result['results'][i]);
+            var arr = [];
+            arr.push(i + 1);
+            arr.push(result['results'][i]);
+            //console.log(arr);
+            output.push(arr);
+        }
+        data.addRows(output);
 
-    data.addRows([
-      [1,  138.2],
-      [2,  142.6],
-      [3,  146.4],
-      [4,  148.0],
-      [5,  151.2],
-      [6,  156.2],
-      [7,  158.0],
-      [8,  159.2],
-      [9,  160.4],
-      [10, 162.8],
-      [11,  165.0],
-      [12,  167.8],
-      [13,  169.0],
-      [14,  171.2],
-      [15,	172.8],
-      [16,	175.2],
-      [17,	176.6],
-      [18,	178.4],
-      [19,	179.6],
-      [20,	180.4]
-    ]);
+        var options = {
+            title: 'Evacuation Time of Crowd',
+            vAxis: {
+                title: 'Evacuation Time (sec)'
+            }
+        };
 
-    var options = {
-      title: 'Evacuation Time of Crowd',
-      vAxis: {
-      	title: 'Evacuation Time (sec)',
-      	ticks: [130,135,140,145,150,155,160,165,170,175,180,185]
-      }
-    };
+        var chart = new google.visualization.LineChart(document.getElementById('simulationEvacuationChart'));
 
-  var chart = new google.visualization.LineChart(document.getElementById('simulationEvacuationChart'));
-
-  chart.draw(data, options);
-  }
+        chart.draw(data, options);
+    });
+}
 </script>
-<div id="simulationEvacuationChart" style="height:400px"></div>
