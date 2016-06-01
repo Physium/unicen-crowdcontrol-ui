@@ -78,18 +78,55 @@
                 <!--Communication Testing Protocol-->
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        Communication Testing Protocol
+                        Parameter Inputss ( Batch run ) <code> work in progress </code>
                     </div>
                     <div class="panel-body">
-                        <section>
-                            <!--Test Protocol-->
-                            <label>
-                                Click for server status
-                            </label>
+                        <div id="runs" class="field">
+                            <label>No of runs</label>
                             <div>
-                                <button id="test" class="btn btn-md btn-success">Test!</button>
+                                <input type="number" min="0" pattern="number" />
                             </div>
-                        </section>
+                        </div>
+                        <div id="distribution">
+                            <label>Distribution:</label>
+                            <select class="js-example-basic-single" style="width:100%">
+                                <option value="AllLevelsAllModes">AllLevelsAllModes</option>
+                                <option value="AllLevelAllMalls">AllLevelAllMalls</option>
+                                <option value="AllLevelAllTrain">AllLevelAllTrain</option>
+                                <option value="AllLevelsAllBusTaxi">AllLevelsAllBusTaxi</option>
+                                <option value="Level6AllBusTaxi">Level6AllBusTaxi</option>
+                                <option value="Level6AllMalls">Level6AllMalls</option>
+                                <option value="Level6AllTrain">Level6AllTrain</option>
+                                <option value="Level4AllModes">Level4AllModes</option>
+                                <option value="Level4AllMalls">Level4AllMalls</option>
+                                <option value="Level4AllTrain">Level4AllTrain</option>
+                                <option value="Level4AllBusTaxi">Level4AllBusTaxi</option>
+                                <option value="Level3AllModes">Level3AllModes</option>
+                                <option value="Level3AllMalls">Level3AllMalls</option>
+                                <option value="Level3AllTrain">Level3AllTrain</option>
+                                <option value="Level3AllBusTaxi">Level3AllBusTaxi</option>
+                            </select>
+                        </div>
+                        <div id="disruption">
+                            <label>Disruption</label>
+                            <select class="js-example-basic-single" style="width:100%">
+                                <option value="AllGreen">AllGreen</option>
+                                <option value="FullDisruption">FullDisruption</option>
+                                <option value="DoorwayDisrupted">DoorwayDisrupted</option>
+                                <option value="ElevatorsDisrupted">ElevatorsDisrupted</option>
+                                <option value="EscalatorsDisrupted">EscalatorsDisrupted</option>
+                            </select>
+                        </div>
+                        <div id="strategy">
+                            <label>Strategy</label>
+                            <select class="js-example-basic-single" style="width:100%">
+                                <option value="PI-NB">PI-NB</option>
+                                <option value="PI-AB">PI-AB</option>
+                                <option value="CI-NB">CI-NB</option>
+                                <option value="CI-AB">CI-AB</option>
+                                <option value="CI-OT">PI-OT</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <!--End Communication Testing Protocol-->
@@ -103,7 +140,7 @@
                             Run Simulation
                         </label>
                         <div>
-                            <button id="start" class="btn btn-md btn-success">Start <span class="glyphicon glyphicon-play"></span></button>
+                            <button id="start" class="btn btn-md btn-success">Start</button>
                             <button id="stop" class="btn btn-md btn-success">Stop <span class="glyphicon glyphicon-stop"></span></button>
                             <button class="btn btn-md btn-success">Reset <span class="glyphicon glyphicon-refresh"></span></button>
                         </div>
@@ -113,7 +150,7 @@
                 <!--Parameter Inputs-->
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        Parameter Inputs <code>work in progress</code>
+                        Parameter Inputs ( Single Run ) <code>work in progress</code>
                     </div>
                     <div class="panel-body">
                         <div id="building" class="field">
