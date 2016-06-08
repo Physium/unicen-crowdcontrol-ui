@@ -1,10 +1,13 @@
 console.log('\'Allo \'Allo!');
 google.charts.load('current', { 'packages': ['line', 'corechart'] });
-var urlStatus = 'http://unicern-rpc-03:8080/SimulatorControl/?command=status';
-var urlStart = 'http://unicern-rpc-03:8080/SimulatorControl/?command=start';
-var urlStop = 'http://unicern-rpc-03:8080/SimulatorControl/?command=urlStop';
-var urlData = 'http://unicern-rpc-03:8080/SimulatorControl/?command=getPercentileData';
+var ipAddress = '10.1.20.70:8080';
+var urlStatus = 'http://'+ipAddress+'/SimulatorControl/?command=status';
+var urlStart = 'http://'+ipAddress+'/SimulatorControl/?command=start';
+var urlStop = 'http://'+ipAddress+'/SimulatorControl/?command=urlStop';
+var urlData = 'http://'+ipAddress+'/SimulatorControl/?command=getPercentileData';
+var urlSingleRunData = 'http://'+ipAddress+'/SimulatorControl/?command=getAllSingleRunData';
 //10.1.12.68
+
 
 //test add
 var startNewSimulation = function(building, location, time, crowd, activatedLift, activatedEscalator, activatedAccess) {
@@ -114,6 +117,33 @@ $(document).ready(function() {
     console.log($('#escalator input:checked').val());
     console.log($('#access select').val());
     console.log($('#access input:checked').val());
+
+    //batch submit
+    $('#batchRun').click(function(){
+        var runs = $('#runs input').val();
+        var distribution = $('#distribution select').val();
+        var disruption = $('#disruption select').val();
+        var strategy = $('#strategy select').val();
+
+        var params = {};
+
+        params['run'] = parseInt(runs);
+        params['Distribution'] = distribution;
+        params['Disruption'] = disruption;
+        params['Strategy'] = strategy;
+
+        console.log(JSON.stringify(params));
+        var jsonOutput = JSON.stringify(params);
+        $.ajax({
+            method: 'POST',
+            url: urlStart,
+            //i need to change this to use {config : jsonOutput} instead
+            data: {'config':jsonOutput}
+        }).done(function(msg) {
+            console.log(msg);
+            
+        });
+    })
 
     //submit
     $('#run').click(function() {
@@ -228,10 +258,11 @@ $(document).ready(function() {
         $.ajax({
             method: 'POST',
             url: urlStart,
-            data: jsonOutput
+            //i need to change this to use {config : jsonOutput} instead
+            data: {'config':jsonOutput}
         }).done(function(msg) {
             console.log(msg);
-            startNewSimulation(building, location, time, crowd, output['activatedLift'], output['activatedEscalator'], output['activatedAccess']);
+            //startNewSimulation(building, location, time, crowd, output['activatedLift'], output['activatedEscalator'], output['activatedAccess']);
         });
 
     });

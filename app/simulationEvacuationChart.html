@@ -3,32 +3,59 @@ google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
 
-    $.get(urlData, function(result) {
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Percentile');
-        data.addColumn('number', 'Simulation 1');
-        var output = [];
-        //console.log(result);
-        for (var i = 0; i < result['results'].length; i++) {
-            //console.log(result['results'][i]);
-            var arr = [];
-            arr.push(i + 1);
-            arr.push(result['results'][i]);
-            //console.log(arr);
-            output.push(arr);
-        }
-        data.addRows(output);
+    $.get(urlSingleRunData, function(result) {
 
-        var options = {
-            title: 'Evacuation Time of Crowd',
-            vAxis: {
-                title: 'Evacuation Time (sec)'
+        if(result.length > 0) {
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Percentile');
+            for(var i = 0; i < result.length; i++){
+                data.addColumn('number', 'Job ID '+result[i]['job_id']);
             }
-        };
 
-        var chart = new google.visualization.LineChart(document.getElementById('simulationEvacuationChart'));
 
-        chart.draw(data, options);
+            //obtain all results
+            var output = [];
+            for(var i = 0; i < result[0]['results'].length; i++){
+                var arr  = [];
+                arr.push((i+1)*5);
+                for(var j = 0; j < result.length;j++){
+                    arr.push(result[j]['results'][i]);
+                }
+
+                output.push(arr);
+            }
+
+            data.addRows(output);
+
+            //data.addColumn('number', 'Simulation ID');
+            /*var output = [];
+            //console.log(result);
+            for (var i = 0; i < result.length; i++) {
+                //console.log(result['results'][i]);
+                var arr = [];
+                //console.log(result);
+                arr.push(i + 1);
+                arr.push(result['results'][i]);
+                //console.log(arr);
+                output.push(arr);
+            }
+            data.addRows(output);*/
+
+            var options = {
+                title: 'Evacuation Time of Crowd',
+                vAxis: {
+                    title: 'Evacuation Time (sec)',
+
+                },
+                hAxis: {
+                    title: 'Percentile'
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('simulationEvacuationChart'));
+
+            chart.draw(data, options);
+        }
     });
 }
 </script>
