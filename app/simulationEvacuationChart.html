@@ -1,26 +1,26 @@
 <script type="text/javascript">
 
 
-$.get('singleresults.json', function(result) {
-    console.log(result.length);
-    if (result.length > 0) {
+//$.get(urlSingleRunData, function(result) {
+    //console.log(result.length);
+    if (simChartData.length > 0) {
 
         google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
             var data = new google.visualization.DataTable();
             data.addColumn('number', 'Percentile');
-            for (var i = 0; i < result.length; i++) {
-                data.addColumn('number', 'Job ID ' + result[i]['jobId']);
+            for (var i = 0; i < simChartData.length; i++) {
+                data.addColumn('number', 'Job ID ' + simChartData[i]['jobId']);
             }
 
 
             //obtain all results
             var output = [];
-            for (var i = 0; i < JSON.parse(result[0]['result'])['results'].length; i++) {
+            for (var i = 0; i < JSON.parse(simChartData[0]['result'])['results'].length; i++) {
                 var arr = [];
                 arr.push((i + 1) * 5);
-                for (var j = 0; j < result.length; j++) {
-                    arr.push(JSON.parse(result[j]['result'])['results'][i]);
+                for (var j = 0; j < simChartData.length; j++) {
+                    arr.push(JSON.parse(simChartData[j]['result'])['results'][i]);
                 }
 
                 output.push(arr);
@@ -63,6 +63,6 @@ $.get('singleresults.json', function(result) {
     } else {
         $("#simulationEvacuationChart").append("<h1>No past simulations</h1>");
     }
-});
+//});
 </script>
 <div id="simulationEvacuationChart" style="height:400px"></div>

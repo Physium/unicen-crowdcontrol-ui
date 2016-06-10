@@ -2,29 +2,30 @@ console.log('\'Allo \'Allo!');
 google.charts.load('current', { 'packages': ['line', 'corechart'] });
 //endpoints
 var ipAddress = '10.1.20.70:8080'; //10.1.12.68
-var urlStatus = 'http://'+ipAddress+'/SimulatorControl/?command=status';
-var urlStart = 'http://'+ipAddress+'/SimulatorControl/?command=start';
-var urlStop = 'http://'+ipAddress+'/SimulatorControl/?command=urlStop';
-var urlData = 'http://'+ipAddress+'/SimulatorControl/?command=getPercentileData';
-var urlSingleRunData = 'http://'+ipAddress+'/SimulatorControl/?command=getAllSingleRunData';
-var urlBatchRunData = 'http://'+ipAddress+'/SimulatorControl/?command=getAllBatchRunData';
+var urlStatus = 'http://' + ipAddress + '/SimulatorControl/?command=status';
+var urlStart = 'http://' + ipAddress + '/SimulatorControl/?command=start';
+var urlStop = 'http://' + ipAddress + '/SimulatorControl/?command=urlStop';
+var urlData = 'http://' + ipAddress + '/SimulatorControl/?command=getPercentileData';
+var urlSingleRunData = 'http://' + ipAddress + '/SimulatorControl/?command=getAllSingleRunData';
+var urlBatchRunData = 'http://' + ipAddress + '/SimulatorControl/?command=getAllBatchRunData';
 
 //global variable
 var batchRunData;
 var singleRunData;
+var simChartData = [];
 
-var getBatchRunDataInfo = function(id){
-    for(var i = 0; i < batchRunData.length; i++){
-        if(batchRunData[i]['batchId'] == id){
+var getBatchRunDataInfo = function(id) {
+    for (var i = 0; i < batchRunData.length; i++) {
+        if (batchRunData[i]['batchId'] == id) {
             return batchRunData[i]['batch'];
         }
     }
     return 'ID not found';
 }
 
-var getSingleRunDataInfo = function(id){
-    for(var i = 0; i < singleRunData.length; i++){
-        if(singleRunData[i]['jobId'] == id){
+var getSingleRunDataInfo = function(id) {
+    for (var i = 0; i < singleRunData.length; i++) {
+        if (singleRunData[i]['jobId'] == id) {
             return singleRunData[i];
         }
     }
@@ -55,6 +56,39 @@ var startNewSimulation = function(building, location, time, crowd, activatedLift
     return firebase.database().ref().update(updates);
 }
 
+// function to update the chart with new data.
+function updateChart() {
+
+    dataTable = new google.visualization.DataTable();
+
+    var newData = [
+        ['Year', 'Sales', 'Expenses', 'Other'],
+        ['2004', 1000, 400, 232],
+        ['2005', 1170, 460, 421],
+        ['2006', 660, 1120, 4324],
+        ['2007', 1030, 540, 4234],
+        ['2008', 1530, 50, 234]
+    ];
+
+    // determine the number of rows and columns.
+    var numRows = newData.length;
+    var numCols = newData[0].length;
+
+    // in this case the first column is of type 'string'.
+    dataTable.addColumn('string', newData[0][0]);
+
+    // all other columns are of type 'number'.
+    for (var i = 1; i < numCols; i++)
+        dataTable.addColumn('number', newData[0][i]);
+
+    // now add the rows.
+    for (var i = 1; i < numRows; i++)
+        dataTable.addRow(newData[i]);
+
+    // redraw the chart.
+    chart.draw(dataTable, options);
+
+}
 
 
 //google chart
@@ -108,7 +142,7 @@ $(document).ready(function() {
         }, 5000);
     });
 
-    //END APIs Calls
+
     //select2 elements
     $('.js-example-basic-single').select2();
 
@@ -143,14 +177,14 @@ $(document).ready(function() {
     console.log($('#access input:checked').val());
 
     //batch submit
-    $('#batchRun').click(function(){
+    $('#batchRun').click(function() {
         var runs = $('#runs input').val();
         var distribution = $('#distribution select').val();
         var disruption = $('#disruption select').val();
         var strategy = $('#strategy select').val();
 
         var params = {};
-
+        console.log(distribution);
         params['run'] = parseInt(runs);
         params['Distribution'] = distribution;
         params['Disruption'] = disruption;
@@ -162,10 +196,10 @@ $(document).ready(function() {
             method: 'POST',
             url: urlStart,
             //i need to change this to use {config : jsonOutput} instead
-            data: {'config':jsonOutput}
+            data: { 'config': jsonOutput }
         }).done(function(msg) {
             console.log(msg);
-            
+
         });
     })
 
@@ -227,53 +261,53 @@ $(document).ready(function() {
             }
         });
         /*
-		sample parameters request
-		{  
-			"id":1
-			"building":"SUNTEC-EXH",
-			"location":"601-602",
-			"time":"00:00",
-			"crowd":"RANDOM",
-			"activatedLift":[  
-			  "Lift 2 @ Floor 0",
-			  "Lift 3 @ Floor 0"
-			],
-			"activatedEscalator":[  
-			  "Stair id 2 @ level 1"
-			],
-			"activatedAccess":[  
-			  "Door 0",
-			  "Door 1"
-			]
-		}*/
+        sample parameters request
+        {  
+            "id":1
+            "building":"SUNTEC-EXH",
+            "location":"601-602",
+            "time":"00:00",
+            "crowd":"RANDOM",
+            "activatedLift":[  
+              "Lift 2 @ Floor 0",
+              "Lift 3 @ Floor 0"
+            ],
+            "activatedEscalator":[  
+              "Stair id 2 @ level 1"
+            ],
+            "activatedAccess":[  
+              "Door 0",
+              "Door 1"
+            ]
+        }*/
 
         /*
         sample output
         {
-        	'id' : 1 //match to 
-         	"interval":"5",
-         	results: [
-        		156,
-        		239.4,
-        		324.8,
-        		343.8,
-        		349.6,
-        		357.6,
-        		384.2,
-        		413,
-        		426.4,
-        		434.4,
-        		447,
-        		453.6,
-        		460.8,
-        		465,
-        		471.2,
-        		480.8,
-        		489,
-        		520,
-        		531.4,
-        		560.2
-        	]
+            'id' : 1 //match to 
+            "interval":"5",
+            results: [
+                156,
+                239.4,
+                324.8,
+                343.8,
+                349.6,
+                357.6,
+                384.2,
+                413,
+                426.4,
+                434.4,
+                447,
+                453.6,
+                460.8,
+                465,
+                471.2,
+                480.8,
+                489,
+                520,
+                531.4,
+                560.2
+            ]
         }
         */
         //optionValues.push($(this).val());
@@ -283,7 +317,7 @@ $(document).ready(function() {
             method: 'POST',
             url: urlStart,
             //i need to change this to use {config : jsonOutput} instead
-            data: {'config':jsonOutput}
+            data: { 'config': jsonOutput }
         }).done(function(msg) {
             console.log(msg);
             //startNewSimulation(building, location, time, crowd, output['activatedLift'], output['activatedEscalator'], output['activatedAccess']);
@@ -315,54 +349,56 @@ $(document).ready(function() {
     });*/
 
     //THIS IS HISTORY PAGE
-    var currentProgress = function(batch,runs){
+    var currentProgress = function(batch, runs) {
         var currentProgress = 0;
         var countFinishRuns = batch.length;
-        if(batch.length > 0){
-            for(var i = 0; i < batch.length; i++){
-                if(batch[i]['instanceState'] == 'FINISHED'){
+        if (batch.length > 0) {
+            for (var i = 0; i < batch.length; i++) {
+                if (batch[i]['instanceState'] == 'FINISHED') {
                     currentProgress = currentProgress + 1;
-                } 
+                }
             }
         }
-        console.log(currentProgress)
-        return (currentProgress/runs) * 100;
+        //console.log(currentProgress)
+        return (currentProgress / runs) * 100;
     };
 
-    var averageResult = function(batch){
+    var averageResult = function(batch) {
         var finalArr = [];
         var parseResult = JSON.parse(batch[0]['result']);
-
-        for(var i = 0; i < parseResult['results'].length; i++){
-            var temp = 0;
-            for(var j = 0; j < batch.length; j++){
-
-                var parseTempResult = JSON.parse(batch[j]['result']);
-                temp = temp + parseTempResult['results'][i];
+        if (parseResult != null) {
+            for (var i = 0; i < parseResult['results'].length; i++) {
+                var temp = 0;
+                for (var j = 0; j < batch.length; j++) {
+                    var parseTempResult = JSON.parse(batch[j]['result']);
+                    if (parseTempResult != null) {
+                        console.log(parseTempResult)
+                        temp = temp + parseTempResult['results'][i];
+                    }
+                }
+                finalArr.push(temp / batch.length)
             }
-            finalArr.push(temp/batch.length)
         }
-
         return finalArr;
     };
 
-    $.get("batchresults.json",function(data){
+    $.get(urlBatchRunData, function(data) {
         console.log(data);
         batchRunData = data;
-        for(var i = 0; i < data.length; i++){
+        for (var i = 0; i < data.length; i++) {
             var batchId = data[i]["batchId"];
             var runs = data[i]["runs"]
-            var progress = currentProgress(data[i]["batch"],runs);
+            var progress = currentProgress(data[i]["batch"], runs);
             var avgResults = averageResult(data[i]["batch"]);
 
 
             var row1 = data[i]["batch"][0]["result"];
             var row1Result = JSON.parse(row1);
-            $("#batchResults").append("<tr id='"+batchId+"'>" +
-             "<td class='batchId'>"+batchId+"</td><td class='progress'>"+progress+"%</td>" + 
-             "<td class='runs'>"+runs+"</td><td><button id='result' data-toggle='modal' data-id='"+batchId+"' data-target='#resultsModal' class='btn btn-sm btn-success'>View Results</button></td>" +
-             "<td> <button data-toggle='modal' data-id='"+batchId+"' data-target='#myModal' class='btn btn-sm btn-success'>View</button></td></tr>");
-            
+            $("#batchResults").append("<tr id='" + batchId + "'>" +
+                "<td class='batchId'>" + batchId + "</td><td class='progress'>" + Math.round(progress) + "%</td>" +
+                "<td class='runs'>" + runs + "</td><td><button id='result' data-toggle='modal' data-id='" + batchId + "' data-target='#resultsModal' class='btn btn-sm btn-success'>View Results</button></td>" +
+                "<td> <button data-toggle='modal' data-id='" + batchId + "' data-target='#myModal' class='btn btn-sm btn-success'>View</button></td></tr>");
+
             /*console.log(avgResults.length);
             for(var j = 0; j < avgResults.length; j++){
                 console.log(batchId);
@@ -371,10 +407,43 @@ $(document).ready(function() {
         }
     });
 
-    $.get("singleresults.json",function(data){
-        console.log(data);
+
+
+    $.get(urlSingleRunData, function(data) {
         singleRunData = data;
-        for(var i = 0; i < data.length; i++){
+
+        $('#simChoiceSubmit').click(function() {
+            var selectedJobId = $('#simChoice').val();
+            for (var i = 0; i < singleRunData.length; i++) {
+                if (singleRunData[i]['jobId'] == selectedJobId) {
+                    simChartData.push(singleRunData[i]);
+                }
+            }
+            console.log('hello');
+            console.log(simChartData);
+        });
+
+        function singleRunList() {
+            var res = [];
+            //console.log(singleRunData);
+            for (var i = 0; i < data.length; i++) {
+                var temp = {
+                    id: data[i]['jobId'],
+                    text: data[i]['jobId']
+                }
+                console.log(temp);
+                res.push(temp);
+            }
+            return res;
+        }
+
+        $('#simChoice').select2({
+            data: singleRunList()
+        })
+
+        console.log(data);
+        
+        for (var i = 0; i < data.length; i++) {
             var jobId = data[i]["jobId"];
             var instanceId = data[i]["instanceId"];
             var instanceState = data[i]["instanceState"];
@@ -387,11 +456,11 @@ $(document).ready(function() {
 
             //var row1 = data[i]["batch"][0]["result"];
             //var row1Result = JSON.parse(row1);
-            $("#singleResults").append("<tr id='"+jobId+"'>" +
-             "<td class='jobId'>"+jobId+"</td><td class='instanceId'>"+instanceId+"</td>" + 
-             "<td class='instanceState'>"+instanceState+"</td><td><button id='result' data-toggle='modal' data-id='"+jobId+"' data-target='#singleResultsModal' class='btn btn-sm btn-success'>View Results</button></td>" +
-             "<td> <button data-toggle='modal' data-id='"+jobId+"' data-target='#singleParamModal' class='btn btn-sm btn-success'>View</button></td></tr>");
-            
+            $("#singleResults").append("<tr id='" + jobId + "'>" +
+                "<td class='jobId'>" + jobId + "</td><td class='instanceId'>" + instanceId + "</td>" +
+                "<td class='instanceState'>" + instanceState + "</td><td><button id='result' data-toggle='modal' data-id='" + jobId + "' data-target='#singleResultsModal' class='btn btn-sm btn-success'>View Results</button></td>" +
+                "<td> <button data-toggle='modal' data-id='" + jobId + "' data-target='#singleParamModal' class='btn btn-sm btn-success'>View</button></td></tr>");
+
             /*console.log(avgResults.length);
             for(var j = 0; j < avgResults.length; j++){
                 console.log(batchId);
@@ -399,10 +468,11 @@ $(document).ready(function() {
             }*/
         }
     });
-    $('#resultsModal').on('show.bs.modal',function(event){
+    $('#resultsModal').on('show.bs.modal', function(event) {
 
         google.charts.setOnLoadCallback(drawChart);
-        function drawChart(){
+
+        function drawChart() {
             var button = $(event.relatedTarget);
             var batchId = button.data('id');
             var batchArr = getBatchRunDataInfo(batchId);
@@ -419,7 +489,7 @@ $(document).ready(function() {
                 //console.log(result['results'][i]);
                 var arr = [];
                 //console.log(result);
-                arr.push((i+1) * 5);
+                arr.push((i + 1) * 5);
                 arr.push(avgResults[i]);
                 //console.log(arr);
                 output.push(arr);
@@ -428,7 +498,7 @@ $(document).ready(function() {
 
             var options = {
                 title: 'Evacuation Time of Crowd',
-                width:'100%',
+                width: '100%',
                 height: '400',
                 legend: 'none',
                 vAxis: {
@@ -438,7 +508,7 @@ $(document).ready(function() {
                 hAxis: {
                     title: 'Percentile'
                 },
-                chartArea:{
+                chartArea: {
                     left: '25%',
                 }
             };
@@ -449,10 +519,11 @@ $(document).ready(function() {
         }
     });
 
-    $('#singleResultsModal').on('show.bs.modal',function(event){
+    $('#singleResultsModal').on('show.bs.modal', function(event) {
 
         google.charts.setOnLoadCallback(drawChart);
-        function drawChart(){
+
+        function drawChart() {
             var button = $(event.relatedTarget);
             var jobId = button.data('id');
             var singleArr = getSingleRunDataInfo(jobId);
@@ -468,7 +539,7 @@ $(document).ready(function() {
                 //console.log(result['results'][i]);
                 var arr = [];
                 //console.log(result);
-                arr.push((i+1) * 5);
+                arr.push((i + 1) * 5);
                 arr.push(result[i]);
                 //console.log(arr);
                 output.push(arr);
@@ -477,7 +548,7 @@ $(document).ready(function() {
 
             var options = {
                 title: 'Evacuation Time of Crowd',
-                width:'100%',
+                width: '100%',
                 height: '400',
                 legend: 'none',
                 vAxis: {
@@ -487,7 +558,7 @@ $(document).ready(function() {
                 hAxis: {
                     title: 'Percentile'
                 },
-                chartArea:{
+                chartArea: {
                     left: '25%',
                 }
             };
@@ -498,7 +569,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#singleParamModal').on('show.bs.modal',function(event){
+    $('#singleParamModal').on('show.bs.modal', function(event) {
 
         var button = $(event.relatedTarget);
         var jobId = button.data('id');
@@ -514,36 +585,35 @@ $(document).ready(function() {
         var activatedLift = parameter['activatedLift'];
         var activatedEscalator = parameter['activatedEscalator'];
         var activatedAccess = parameter['activatedAccess'];
-        
+
         var modal = $(this);
-        modal.find('.modal-body').html("<div><label> Buidling </label> : "+building+"</div>"+
-            "<div><label> Location </label> : "+location+"</div>"+
-            "<div><label> Time </label> : "+time+"</div>"+
-            "<div><label> Crowd </label> : "+crowd+"</div>"+
-            "<div><label> Information </label> : "+information+"</div>"+
-            "<div><label> Path </label> : "+path+"</div>");
-        
+        modal.find('.modal-body').html("<div><label> Buidling </label> : " + building + "</div>" +
+            "<div><label> Location </label> : " + location + "</div>" +
+            "<div><label> Time </label> : " + time + "</div>" +
+            "<div><label> Crowd </label> : " + crowd + "</div>" +
+            "<div><label> Information </label> : " + information + "</div>" +
+            "<div><label> Path </label> : " + path + "</div>");
+
     });
 
-    $('#myModal').on('show.bs.modal', function(event){
+    $('#myModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
         var batchId = button.data('id');
         var batchArr = getBatchRunDataInfo(batchId);
 
         var modal = $(this);
 
-        modal.find('.modal-body').html("<table id='instanceTable' style='table-layout:fixed' class='table table-bordered'>"+
-            "<tr><th>Job ID</th><th>Instance ID</th><th>Instance State</th></tr>"
-            +"</table>");
-        for(var i = 0; i < batchArr.length; i++){
+        modal.find('.modal-body').html("<table id='instanceTable' style='table-layout:fixed' class='table table-bordered'>" +
+            "<tr><th>Job ID</th><th>Instance ID</th><th>Instance State</th></tr>" + "</table>");
+        for (var i = 0; i < batchArr.length; i++) {
             var jobId = batchArr[i]['jobId'];
             var instanceId = batchArr[i]['instanceId'];
             var instanceState = batchArr[i]['instanceState'];
-            modal.find('#instanceTable').append("<tr><td>"+jobId+"</td><<td>"+instanceId+"</td><td>"+instanceState+"</td></tr>")
+            modal.find('#instanceTable').append("<tr><td>" + jobId + "</td><<td>" + instanceId + "</td><td>" + instanceState + "</td></tr>")
 
         }
-        
-        
+
+
     });
 
 
@@ -554,7 +624,7 @@ $(document).ready(function() {
     });*/
     // console.log(new Firebase('https://docs-examples.firebaseio.com/web/data'));
     /*database.ref('simulation').once('value').then(function(snapshot){
-    		console.log(snapshot.val());
+            console.log(snapshot.val());
     });*/
 
 })
