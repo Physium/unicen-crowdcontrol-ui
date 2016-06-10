@@ -1,25 +1,26 @@
 <script type="text/javascript">
-google.charts.setOnLoadCallback(drawChart);
 
-function drawChart() {
 
-    $.get(urlSingleRunData, function(result) {
+$.get('singleresults.json', function(result) {
+    console.log(result.length);
+    if (result.length > 0) {
 
-        if(result.length > 0) {
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
             var data = new google.visualization.DataTable();
             data.addColumn('number', 'Percentile');
-            for(var i = 0; i < result.length; i++){
-                data.addColumn('number', 'Job ID '+result[i]['job_id']);
+            for (var i = 0; i < result.length; i++) {
+                data.addColumn('number', 'Job ID ' + result[i]['jobId']);
             }
 
 
             //obtain all results
             var output = [];
-            for(var i = 0; i < result[0]['results'].length; i++){
-                var arr  = [];
-                arr.push((i+1)*5);
-                for(var j = 0; j < result.length;j++){
-                    arr.push(result[j]['results'][i]);
+            for (var i = 0; i < JSON.parse(result[0]['result'])['results'].length; i++) {
+                var arr = [];
+                arr.push((i + 1) * 5);
+                for (var j = 0; j < result.length; j++) {
+                    arr.push(JSON.parse(result[j]['result'])['results'][i]);
                 }
 
                 output.push(arr);
@@ -49,6 +50,9 @@ function drawChart() {
                 },
                 hAxis: {
                     title: 'Percentile'
+                },
+                chartArea: {
+                    width: '50%'
                 }
             };
 
@@ -56,8 +60,9 @@ function drawChart() {
 
             chart.draw(data, options);
         }
-    });
-}
+    } else {
+        $("#simulationEvacuationChart").append("<h1>No past simulations</h1>");
+    }
+});
 </script>
-
 <div id="simulationEvacuationChart" style="height:400px"></div>

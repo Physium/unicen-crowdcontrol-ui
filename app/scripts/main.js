@@ -1,13 +1,35 @@
 console.log('\'Allo \'Allo!');
 google.charts.load('current', { 'packages': ['line', 'corechart'] });
-var ipAddress = '10.1.20.70:8080';
+//endpoints
+var ipAddress = '10.1.20.70:8080'; //10.1.12.68
 var urlStatus = 'http://'+ipAddress+'/SimulatorControl/?command=status';
 var urlStart = 'http://'+ipAddress+'/SimulatorControl/?command=start';
 var urlStop = 'http://'+ipAddress+'/SimulatorControl/?command=urlStop';
 var urlData = 'http://'+ipAddress+'/SimulatorControl/?command=getPercentileData';
 var urlSingleRunData = 'http://'+ipAddress+'/SimulatorControl/?command=getAllSingleRunData';
-//10.1.12.68
+var urlBatchRunData = 'http://'+ipAddress+'/SimulatorControl/?command=getAllBatchRunData';
 
+//global variable
+var batchRunData;
+var singleRunData;
+
+var getBatchRunDataInfo = function(id){
+    for(var i = 0; i < batchRunData.length; i++){
+        if(batchRunData[i]['batchId'] == id){
+            return batchRunData[i]['batch'];
+        }
+    }
+    return 'ID not found';
+}
+
+var getSingleRunDataInfo = function(id){
+    for(var i = 0; i < singleRunData.length; i++){
+        if(singleRunData[i]['jobId'] == id){
+            return singleRunData[i];
+        }
+    }
+    return 'ID not found';
+}
 
 //test add
 var startNewSimulation = function(building, location, time, crowd, activatedLift, activatedEscalator, activatedAccess) {
@@ -32,6 +54,8 @@ var startNewSimulation = function(building, location, time, crowd, activatedLift
 
     return firebase.database().ref().update(updates);
 }
+
+
 
 //google chart
 $(document).ready(function() {
@@ -277,7 +301,257 @@ $(document).ready(function() {
         console.log(error);
     });
 
+    /*$.get("batchresults.json",function(data){
+        console.log(data);
+        for(var i = 0; i < data.length; i++){
+            var row1 = data[i]["batch"][0]["result"];
+            var row1Result = JSON.parse(row1);
+            $("#batchResults").append("<tr id='"+data[i]["batchId"]+"'><td class='batchId' rowspan='2'>"+data[i]["batchId"]+"</td><td class='progress' rowspan='2'>100%</td><td class='instanceid'>"+data[i]["batch"][0]["instanceId"]+"</td><td class='instanceState'>"+data[i]["batch"][0]["instanceState"]+"</td><td></td></tr>");
+            for(var j = 1; j < data[i]["batch"].length; j++){
+                console.log(data[i]["batch"].length);
+                $("#batchResults").append("<tr><td class='instanceid'>"+data[i]["batch"][j]["instanceId"]+"</td><td class='instanceState'>"+data[i]["batch"][j]["instanceState"]+"</td><td style='word-wrap:break-word'>"+row1Result["results"]+"</td></tr>");
+            }
+        }
+    });*/
 
+    //THIS IS HISTORY PAGE
+    var currentProgress = function(batch,runs){
+        var currentProgress = 0;
+        var countFinishRuns = batch.length;
+        if(batch.length > 0){
+            for(var i = 0; i < batch.length; i++){
+                if(batch[i]['instanceState'] == 'FINISHED'){
+                    currentProgress = currentProgress + 1;
+                } 
+            }
+        }
+        console.log(currentProgress)
+        return (currentProgress/runs) * 100;
+    };
+
+    var averageResult = function(batch){
+        var finalArr = [];
+        var parseResult = JSON.parse(batch[0]['result']);
+
+        for(var i = 0; i < parseResult['results'].length; i++){
+            var temp = 0;
+            for(var j = 0; j < batch.length; j++){
+
+                var parseTempResult = JSON.parse(batch[j]['result']);
+                temp = temp + parseTempResult['results'][i];
+            }
+            finalArr.push(temp/batch.length)
+        }
+
+        return finalArr;
+    };
+
+    $.get("batchresults.json",function(data){
+        console.log(data);
+        batchRunData = data;
+        for(var i = 0; i < data.length; i++){
+            var batchId = data[i]["batchId"];
+            var runs = data[i]["runs"]
+            var progress = currentProgress(data[i]["batch"],runs);
+            var avgResults = averageResult(data[i]["batch"]);
+
+
+            var row1 = data[i]["batch"][0]["result"];
+            var row1Result = JSON.parse(row1);
+            $("#batchResults").append("<tr id='"+batchId+"'>" +
+             "<td class='batchId'>"+batchId+"</td><td class='progress'>"+progress+"%</td>" + 
+             "<td class='runs'>"+runs+"</td><td><button id='result' data-toggle='modal' data-id='"+batchId+"' data-target='#resultsModal' class='btn btn-sm btn-success'>View Results</button></td>" +
+             "<td> <button data-toggle='modal' data-id='"+batchId+"' data-target='#myModal' class='btn btn-sm btn-success'>View</button></td></tr>");
+            
+            /*console.log(avgResults.length);
+            for(var j = 0; j < avgResults.length; j++){
+                console.log(batchId);
+                $("#"+batchId+" .avgRes").append("<li>"+avgResults[j]+"</li>");
+            }*/
+        }
+    });
+
+    $.get("singleresults.json",function(data){
+        console.log(data);
+        singleRunData = data;
+        for(var i = 0; i < data.length; i++){
+            var jobId = data[i]["jobId"];
+            var instanceId = data[i]["instanceId"];
+            var instanceState = data[i]["instanceState"];
+            var result = JSON.parse(data[i]["result"])["results"];
+
+
+            //var progress = currentProgress(data[i]["batch"],runs);
+            //var avgResults = averageResult(data[i]["batch"]);
+
+
+            //var row1 = data[i]["batch"][0]["result"];
+            //var row1Result = JSON.parse(row1);
+            $("#singleResults").append("<tr id='"+jobId+"'>" +
+             "<td class='jobId'>"+jobId+"</td><td class='instanceId'>"+instanceId+"</td>" + 
+             "<td class='instanceState'>"+instanceState+"</td><td><button id='result' data-toggle='modal' data-id='"+jobId+"' data-target='#singleResultsModal' class='btn btn-sm btn-success'>View Results</button></td>" +
+             "<td> <button data-toggle='modal' data-id='"+jobId+"' data-target='#singleParamModal' class='btn btn-sm btn-success'>View</button></td></tr>");
+            
+            /*console.log(avgResults.length);
+            for(var j = 0; j < avgResults.length; j++){
+                console.log(batchId);
+                $("#"+batchId+" .avgRes").append("<li>"+avgResults[j]+"</li>");
+            }*/
+        }
+    });
+    $('#resultsModal').on('show.bs.modal',function(event){
+
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart(){
+            var button = $(event.relatedTarget);
+            var batchId = button.data('id');
+            var batchArr = getBatchRunDataInfo(batchId);
+            console.log(batchId);
+            var avgResults = averageResult(batchArr);
+            console.log(avgResults)
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Percentile');
+            data.addColumn('number', batchId);
+            var output = [];
+            //console.log(result);
+            for (var i = 0; i < avgResults.length; i++) {
+                //console.log(result['results'][i]);
+                var arr = [];
+                //console.log(result);
+                arr.push((i+1) * 5);
+                arr.push(avgResults[i]);
+                //console.log(arr);
+                output.push(arr);
+            }
+            data.addRows(output);
+
+            var options = {
+                title: 'Evacuation Time of Crowd',
+                width:'100%',
+                height: '400',
+                legend: 'none',
+                vAxis: {
+                    title: 'Evacuation Time (sec)',
+
+                },
+                hAxis: {
+                    title: 'Percentile'
+                },
+                chartArea:{
+                    left: '25%',
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('resultsModalChart'));
+
+            chart.draw(data, options);
+        }
+    });
+
+    $('#singleResultsModal').on('show.bs.modal',function(event){
+
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart(){
+            var button = $(event.relatedTarget);
+            var jobId = button.data('id');
+            var singleArr = getSingleRunDataInfo(jobId);
+            var result = JSON.parse(singleArr["result"])["results"];
+            console.log(result);
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Percentile');
+            data.addColumn('number', jobId);
+            var output = [];
+            //console.log(result);
+            for (var i = 0; i < result.length; i++) {
+                //console.log(result['results'][i]);
+                var arr = [];
+                //console.log(result);
+                arr.push((i+1) * 5);
+                arr.push(result[i]);
+                //console.log(arr);
+                output.push(arr);
+            }
+            data.addRows(output);
+
+            var options = {
+                title: 'Evacuation Time of Crowd',
+                width:'100%',
+                height: '400',
+                legend: 'none',
+                vAxis: {
+                    title: 'Evacuation Time (sec)',
+
+                },
+                hAxis: {
+                    title: 'Percentile'
+                },
+                chartArea:{
+                    left: '25%',
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('singleResultsModalChart'));
+
+            chart.draw(data, options);
+        }
+    });
+
+    $('#singleParamModal').on('show.bs.modal',function(event){
+
+        var button = $(event.relatedTarget);
+        var jobId = button.data('id');
+        var singleArr = getSingleRunDataInfo(jobId);
+        var parameter = JSON.parse(singleArr["parameter"])
+
+        var building = parameter['building'];
+        var location = parameter['location'];
+        var time = parameter['time'];
+        var crowd = parameter['crowd'];
+        var information = parameter['information'];
+        var path = parameter['path'];
+        var activatedLift = parameter['activatedLift'];
+        var activatedEscalator = parameter['activatedEscalator'];
+        var activatedAccess = parameter['activatedAccess'];
+        
+        var modal = $(this);
+        modal.find('.modal-body').html("<div><label> Buidling </label> : "+building+"</div>"+
+            "<div><label> Location </label> : "+location+"</div>"+
+            "<div><label> Time </label> : "+time+"</div>"+
+            "<div><label> Crowd </label> : "+crowd+"</div>"+
+            "<div><label> Information </label> : "+information+"</div>"+
+            "<div><label> Path </label> : "+path+"</div>");
+        
+    });
+
+    $('#myModal').on('show.bs.modal', function(event){
+        var button = $(event.relatedTarget);
+        var batchId = button.data('id');
+        var batchArr = getBatchRunDataInfo(batchId);
+
+        var modal = $(this);
+
+        modal.find('.modal-body').html("<table id='instanceTable' style='table-layout:fixed' class='table table-bordered'>"+
+            "<tr><th>Job ID</th><th>Instance ID</th><th>Instance State</th></tr>"
+            +"</table>");
+        for(var i = 0; i < batchArr.length; i++){
+            var jobId = batchArr[i]['jobId'];
+            var instanceId = batchArr[i]['instanceId'];
+            var instanceState = batchArr[i]['instanceState'];
+            modal.find('#instanceTable').append("<tr><td>"+jobId+"</td><<td>"+instanceId+"</td><td>"+instanceState+"</td></tr>")
+
+        }
+        
+        
+    });
+
+
+    /*$.get("batchresults.json",function(data){
+        $("#batchResult").bootstrapTable({
+            data: data,
+        });
+    });*/
     // console.log(new Firebase('https://docs-examples.firebaseio.com/web/data'));
     /*database.ref('simulation').once('value').then(function(snapshot){
     		console.log(snapshot.val());
