@@ -378,6 +378,12 @@ window.operateEvents = {
 
 };
 
+$('#clearSimulator').click(function(){
+
+    simChartData = [];
+    $("#simulationEvacuationChart").html("<h1>No simulations results</h1>");
+})
+
 function responseHandler(res){
     var final = [];
     for(var i = 0; i < res.length; i++){
