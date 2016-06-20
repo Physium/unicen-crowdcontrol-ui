@@ -101,10 +101,10 @@ $(document).ready(function() {
 
     //APIs Calls
     //console.log test
-    $.get(urlStatus, function(data) {
-        console.log('hello');
-        console.log(data);
-    });
+    // $.get(urlStatus, function(data) {
+    //     console.log('hello');
+    //     console.log(data);
+    // });
 
     //onclick test
     $('#test').click(function() {
@@ -382,7 +382,7 @@ $(document).ready(function() {
         return finalArr;
     };
 
-    $.get(urlBatchRunData, function(data) {
+    $.get('batchresults.json', function(data) {
         console.log(data);
         batchRunData = data;
         for (var i = 0; i < data.length; i++) {
@@ -409,7 +409,7 @@ $(document).ready(function() {
 
 
 
-    $.get(urlSingleRunData, function(data) {
+    $.get('singleresults.json', function(data) {
         singleRunData = data;
 
         $('#simChoiceSubmit').click(function() {

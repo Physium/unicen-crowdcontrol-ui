@@ -1159,7 +1159,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <div class="page-content">
                 <div class="container">
                     <!-- BEGIN PAGE BREADCRUMBS -->
-                    <ul class="page-breadcrumb breadcrumb">
+                    <!-- <ul class="page-breadcrumb breadcrumb">
                         <li>
                             <a href="index.html">Home</a>
                             <i class="fa fa-circle"></i>
@@ -1167,7 +1167,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         <li>
                             <span>Dashboard</span>
                         </li>
-                    </ul>
+                    </ul> -->
                     <!-- END PAGE BREADCRUMBS -->
                     <!-- BEGIN PAGE CONTENT INNER -->
                     <div class="page-content-inner">
@@ -1179,7 +1179,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div class="widget-thumb-wrap">
                                         <i class="widget-thumb-icon bg-green icon-bulb"></i>
                                         <div class="widget-thumb-body">
-                                            <span class="widget-thumb-subtitle">INSTANCE</span>
+                                            <span class="widget-thumb-subtitle">INSTANCE(S)</span>
                                             <span class="widget-thumb-body-stat" data-counter="counterup" data-value="10">0</span>
                                         </div>
                                     </div>
@@ -1193,7 +1193,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div class="widget-thumb-wrap">
                                         <i class="widget-thumb-icon bg-red icon-layers"></i>
                                         <div class="widget-thumb-body">
-                                            <span class="widget-thumb-subtitle">INSTANCE</span>
+                                            <span class="widget-thumb-subtitle">INSTANCE(S)</span>
                                             <span class="widget-thumb-body-stat" data-counter="counterup" data-value="5">0</span>
                                         </div>
                                     </div>
@@ -1240,16 +1240,20 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </div>
                                     <div class="portlet-body form">
                                         <!-- BEGIN FORM-->
-                                        <form action="#">
+                                        <form id="simulatorInputs" action="#">
                                             <div class="form-body">
-                                                <div class="form-group">
+                                                <div id="building" class="form-group">
                                                     <label class="control-label">Building:</label>
-                                                    <select class="js-example-basic-single form-control" >
+                                                    <select class="js-example-basic-single form-control">
                                                         <option value="SUNTEC-EXH">SUNTEC-EXH Building</option>
                                                     </select>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-6 form-group">
+                                                    <div id="run" class="col-md-4 form-group">
+                                                        <label class="control-label">Runs:</label>
+                                                        <input class="form-control" type="number" min="1" pattern="number" value="1" />
+                                                    </div>
+                                                    <div id="location" class="col-md-4 form-group">
                                                         <label class="control-label">Start Location:</label>
                                                         <select class="js-example-basic-single form-control">
                                                             <option value="601-602">601-602</option>
@@ -1281,7 +1285,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             <option value="MR-311">MR-311</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-6 form-group">
+                                                    <div id="time" class="col-md-4 form-group">
                                                         <label class="control-label">Start Time:</label>
                                                         <div class="input-group">
                                                             <input type="text" class="form-control timepicker timepicker-24">
@@ -1293,98 +1297,142 @@ License: You must have a valid license purchased only from themeforest(the above
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-4 form-group">
-                                                        <label class="control-label">Crowd:</label>
-                                                        <div class="input-icon">
-                                                            <select class="js-example-basic-single form-control" style="width:100%">
-                                                                <option value="RANDOM">RANDOM</option>
-                                                                <option value="REPLAY">REPLAY</option>
-                                                                <option value="AllLevelsAllModes">AllLevelsAllModes</option>
-                                                                <option value="AllLevelAllMalls">AllLevelAllMalls</option>
-                                                                <option value="AllLevelAllTrain">AllLevelAllTrain</option>
-                                                                <option value="AllLevelsAllBusTaxi">AllLevelsAllBusTaxi</option>
-                                                                <option value="Level6AllBusTaxi">Level6AllBusTaxi</option>
-                                                                <option value="Level6AllMalls">Level6AllMalls</option>
-                                                                <option value="Level6AllTrain">Level6AllTrain</option>
-                                                                <option value="Level4AllModes">Level4AllModes</option>
-                                                                <option value="Level4AllMalls">Level4AllMalls</option>
-                                                                <option value="Level4AllTrain">Level4AllTrain</option>
-                                                                <option value="Level4AllBusTaxi">Level4AllBusTaxi</option>
-                                                                <option value="Level3AllModes">Level3AllModes</option>
-                                                                <option value="Level3AllMalls">Level3AllMalls</option>
-                                                                <option value="Level3AllTrain">Level3AllTrain</option>
-                                                                <option value="Level3AllBusTaxi">Level3AllBusTaxi</option>
-                                                            </select>              
+                                                <div id="singleRunParams">
+                                                    <div class="row">
+                                                        <div id="crowd" class="col-md-4 form-group">
+                                                            <label class="control-label">Crowd:</label>
+                                                            <div class="input-icon">
+                                                                <select class="js-example-basic-single form-control" style="width:100%">
+                                                                    <option value="RANDOM">RANDOM</option>
+                                                                    <option value="REPLAY">REPLAY</option>
+                                                                    <option value="AllLevelsAllModes">AllLevelsAllModes</option>
+                                                                    <option value="AllLevelAllMalls">AllLevelAllMalls</option>
+                                                                    <option value="AllLevelAllTrain">AllLevelAllTrain</option>
+                                                                    <option value="AllLevelsAllBusTaxi">AllLevelsAllBusTaxi</option>
+                                                                    <option value="Level6AllBusTaxi">Level6AllBusTaxi</option>
+                                                                    <option value="Level6AllMalls">Level6AllMalls</option>
+                                                                    <option value="Level6AllTrain">Level6AllTrain</option>
+                                                                    <option value="Level4AllModes">Level4AllModes</option>
+                                                                    <option value="Level4AllMalls">Level4AllMalls</option>
+                                                                    <option value="Level4AllTrain">Level4AllTrain</option>
+                                                                    <option value="Level4AllBusTaxi">Level4AllBusTaxi</option>
+                                                                    <option value="Level3AllModes">Level3AllModes</option>
+                                                                    <option value="Level3AllMalls">Level3AllMalls</option>
+                                                                    <option value="Level3AllTrain">Level3AllTrain</option>
+                                                                    <option value="Level3AllBusTaxi">Level3AllBusTaxi</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div id="information" class="col-md-4 form-group">
+                                                            <label class="control-label">Information:</label>
+                                                            <div class="input-icon right">
+                                                                <select class="js-example-basic-single form-control">
+                                                                    <option value="PARTIAL">PARTIAL</option>
+                                                                    <option value="COMPLETE">COMPLETE</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div id="path" class="col-md-4 form-group">
+                                                            <label class="control-label">Path Finding:</label>
+                                                            <select class="js-example-basic-single form-control">
+                                                                <option value="SUNTEC-EXH">NAIVE</option>
+                                                                <option value="ADAPTIVE">ADAPTIVE</option>
+                                                                <option value="ONETIME">ONETIME</option>
+                                                            </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4 form-group">
-                                                        <label class="control-label">Information:</label>
-                                                        <div class="input-icon right">
-                                                            <select class="js-example-basic-single form-control">
-                                                                <option value="PARTIAL">PARTIAL</option>
-                                                                <option value="COMPLETE">COMPLETE</option>
-                                                            </select>
-                                                            </div>
+                                                    <div id="lift" class="form-group">
+                                                        <label class="control-label">Deactivated Lift:</label>
+                                                        <select multiple="multiple" class="js-example-basic-single form-control">
+                                                            <option value="Lift 1 @ Floor 0">Lift 1 @ Floor 0</option>
+                                                            <option value="Lift 2 @ Floor 0">Lift 2 @ Floor 0</option>
+                                                            <option value="Lift 3 @ Floor 0">Lift 3 @ Floor 0</option>
+                                                            <option value="Lift 4 @ Floor 0">Lift 4 @ Floor 0</option>
+                                                            <option value="Lift 5 @ Floor 0">Lift 5 @ Floor 0</option>
+                                                            <option value="Lift 6 @ Floor 0">Lift 6 @ Floor 0</option>
+                                                        </select>
                                                     </div>
-                                                    <div class="col-md-4 form-group">
-                                                        <label class="control-label">Path Finding:</label>
-                                                         <select class="js-example-basic-single form-control">
-                                                            <option value="SUNTEC-EXH">NAIVE</option>
-                                                            <option value="ADAPTIVE">ADAPTIVE</option>
-                                                            <option value="ONETIME">ONETIME</option>
+                                                    <div id="escalator" class="form-group">
+                                                        <label class="control-label">Deactivated Escalator:</label>
+                                                        <select multiple="multiple" class="js-example-basic-single form-control">
+                                                            <option value="Stair id 0 @ level 0">Stair id 0 @ level 0</option>
+                                                            <option value="Stair id 1 @ level 0">Stair id 1 @ level 0</option>
+                                                            <option value="Stair id 2 @ level 0">Stair id 2 @ level 0</option>
+                                                            <option value="Stair id 3 @ level 0">Stair id 3 @ level 0</option>
+                                                            <option value="Stair id 0 @ level 2">Stair id 0 @ level 2</option>
+                                                            <option value="Stair id 1 @ level 2">Stair id 1 @ level 2</option>
+                                                            <option value="Stair id 2 @ level 2">Stair id 2 @ level 2</option>
+                                                            <option value="Stair id 3 @ level 2">Stair id 3 @ level 2</option>
+                                                            <option value="Stair id 4 @ level 2">Stair id 4 @ level 2</option>
+                                                            <option value="Stair id 5 @ level 2">Stair id 5 @ level 2</option>
+                                                            <option value="Stair id 6 @ level 2">Stair id 6 @ level 2</option>
+                                                            <option value="Stair id 7 @ level 2">Stair id 7 @ level 2</option>
+                                                            <option value="Stair id 8 @ level 2">Stair id 8 @ level 2</option>
+                                                            <option value="Stair id 9 @ level 2">Stair id 9 @ level 2</option>
+                                                            <option value="Stair id 0 @ level 3">Stair id 0 @ level 3</option>
+                                                            <option value="Stair id 1 @ level 3">Stair id 1 @ level 3</option>
+                                                            <option value="Stair id 2 @ level 3">Stair id 2 @ level 3</option>
+                                                            <option value="Stair id 3 @ level 3">Stair id 3 @ level 3</option>
+                                                            <option value="Stair id 4 @ level 3">Stair id 4 @ level 3</option>
+                                                            <option value="Stair id 5 @ level 3">Stair id 5 @ level 3</option>
+                                                            <option value="Stair id 0 @ level 5">Stair id 0 @ level 5</option>
+                                                            <option value="Stair id 1 @ level 5">Stair id 1 @ level 5</option>
+                                                        </select>
+                                                    </div>
+                                                    <div id="access" class="form-group">
+                                                        <label class="control-label">Deactivated Access Point:</label>
+                                                        <select multiple="multiple" class="js-example-basic-single form-control">
+                                                            <option value="Door 0 @ Floor 0">Door 0 @ Floor 0</option>
+                                                            <option value="Door 1 @ Floor 2">Door 1 @ Floor 2</option>
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label class="control-label">Deactivated Lift:</label>
-                                                    <select multiple="multiple" class="js-example-basic-single form-control">
-                                                        <option value="Lift 1 @ Floor 0">Lift 1 @ Floor 0</option>
-                                                        <option value="Lift 2 @ Floor 0">Lift 2 @ Floor 0</option>
-                                                        <option value="Lift 3 @ Floor 0">Lift 3 @ Floor 0</option>
-                                                        <option value="Lift 4 @ Floor 0">Lift 4 @ Floor 0</option>
-                                                        <option value="Lift 5 @ Floor 0">Lift 5 @ Floor 0</option>
-                                                        <option value="Lift 6 @ Floor 0">Lift 6 @ Floor 0</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label">Deactivated Escalator:</label>
-                                                    <select multiple="multiple" class="js-example-basic-single form-control">
-                                                        <option value="Stair id 0 @ level 0">Stair id 0 @ level 0</option>
-                                                        <option value="Stair id 1 @ level 0">Stair id 1 @ level 0</option>
-                                                        <option value="Stair id 2 @ level 0">Stair id 2 @ level 0</option>
-                                                        <option value="Stair id 3 @ level 0">Stair id 3 @ level 0</option>
-                                                        <option value="Stair id 0 @ level 2">Stair id 0 @ level 2</option>
-                                                        <option value="Stair id 1 @ level 2">Stair id 1 @ level 2</option>
-                                                        <option value="Stair id 2 @ level 2">Stair id 2 @ level 2</option>
-                                                        <option value="Stair id 3 @ level 2">Stair id 3 @ level 2</option>
-                                                        <option value="Stair id 4 @ level 2">Stair id 4 @ level 2</option>
-                                                        <option value="Stair id 5 @ level 2">Stair id 5 @ level 2</option>
-                                                        <option value="Stair id 6 @ level 2">Stair id 6 @ level 2</option>
-                                                        <option value="Stair id 7 @ level 2">Stair id 7 @ level 2</option>
-                                                        <option value="Stair id 8 @ level 2">Stair id 8 @ level 2</option>
-                                                        <option value="Stair id 9 @ level 2">Stair id 9 @ level 2</option>
-                                                        <option value="Stair id 0 @ level 3">Stair id 0 @ level 3</option>
-                                                        <option value="Stair id 1 @ level 3">Stair id 1 @ level 3</option>
-                                                        <option value="Stair id 2 @ level 3">Stair id 2 @ level 3</option>
-                                                        <option value="Stair id 3 @ level 3">Stair id 3 @ level 3</option>
-                                                        <option value="Stair id 4 @ level 3">Stair id 4 @ level 3</option>
-                                                        <option value="Stair id 5 @ level 3">Stair id 5 @ level 3</option>
-                                                        <option value="Stair id 0 @ level 5">Stair id 0 @ level 5</option>
-                                                        <option value="Stair id 1 @ level 5">Stair id 1 @ level 5</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label">Deactivated Access Point:</label>
-                                                    <select multiple="multiple" class="js-example-basic-single form-control">
-                                                        <option value="Door 0 @ Floor 0">Door 0 @ Floor 0</option>
-                                                        <option value="Door 1 @ Floor 2">Door 1 @ Floor 2</option>
-                                                    </select>
+                                                <div id="batchRunParams">
+                                                    <div id="distribution" class="form-group">
+                                                        <label class="control-label">Distribution:</label>
+                                                        <select class="js-example-basic-single form-control">
+                                                            <option value="AllLevelsAllModes">AllLevelsAllModes</option>
+                                                            <option value="AllLevelAllMalls">AllLevelAllMalls</option>
+                                                            <option value="AllLevelAllTrain">AllLevelAllTrain</option>
+                                                            <option value="AllLevelsAllBusTaxi">AllLevelsAllBusTaxi</option>
+                                                            <option value="Level6AllBusTaxi">Level6AllBusTaxi</option>
+                                                            <option value="Level6AllMalls">Level6AllMalls</option>
+                                                            <option value="Level6AllTrain">Level6AllTrain</option>
+                                                            <option value="Level4AllModes">Level4AllModes</option>
+                                                            <option value="Level4AllMalls">Level4AllMalls</option>
+                                                            <option value="Level4AllTrain">Level4AllTrain</option>
+                                                            <option value="Level4AllBusTaxi">Level4AllBusTaxi</option>
+                                                            <option value="Level3AllModes">Level3AllModes</option>
+                                                            <option value="Level3AllMalls">Level3AllMalls</option>
+                                                            <option value="Level3AllTrain">Level3AllTrain</option>
+                                                            <option value="Level3AllBusTaxi">Level3AllBusTaxi</option>
+                                                        </select>
+                                                    </div>
+                                                    <div id="disruption" class="form-group">
+                                                        <label class="control-label">Disruption</label>
+                                                        <select class="js-example-basic-single form-control">
+                                                            <option value="AllGreen">AllGreen</option>
+                                                            <option value="FullDisruption">FullDisruption</option>
+                                                            <option value="DoorwayDisrupted">DoorwayDisrupted</option>
+                                                            <option value="ElevatorsDisrupted">ElevatorsDisrupted</option>
+                                                            <option value="EscalatorsDisrupted">EscalatorsDisrupted</option>
+                                                        </select>
+                                                    </div>
+                                                    <div id="strategy" class="form-group">
+                                                        <label class="control-label">Strategy:</label>
+                                                        <select class="js-example-basic-single form-control">
+                                                            <option value="PI-NB">PI-NB</option>
+                                                            <option value="PI-AB">PI-AB</option>
+                                                            <option value="CI-NB">CI-NB</option>
+                                                            <option value="CI-AB">CI-AB</option>
+                                                            <option value="CI-OT">PI-OT</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="form-actions">
-                                                <button type="submit" class="btn green">Submit</button>
-                                                <button type="button" class="btn default">Cancel</button>
+                                                <button id="simulationSubmit" type="submit" class="btn green">Submit</button>
+                                                <button id="simulationCancel" type="button" class="btn default">Cancel</button>
                                             </div>
                                         </form>
                                         <!-- END FORM-->
@@ -1400,13 +1448,13 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </div>
                                     </div>
                                     <div class="portlet-body">
-                                        <table id="table-result" data-toggle="table" data-height="700" data-search="true" data-response-handler="responseHandler" data-url="batchresults.json" >
+                                        <table id="table-result" data-toggle="table" data-height="552" data-search="true" data-response-handler="responseHandler" data-url="http://10.1.20.70:8080/SimulatorControl/?command=getAllBatchRunData">
                                             <thead>
                                                 <tr>
                                                     <th data-field="batchId" data-align="center" data-sortable="true">Batch ID</th>
                                                     <th data-field="progress" data-formatter="test" data-align="center" data-sortable="true">Progress</th>
                                                     <th data-field="runs" data-sortable="true" data-sorter="priceSorter" data-align="center">Runs</th>
-                                                    <th data-field="operate" data-formatter='operateFormatter' data-align="center">Actions
+                                                    <th data-field="operate" data-formatter='operateFormatter' data-align="center" data-events="operateEvents">Actions
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -1427,7 +1475,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div class="portlet-body">
                                         <div id="simulation"></div>
                                     </div>
-                                </div>        
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1438,6 +1486,37 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- END CONTENT BODY -->
         </div>
         <!-- END CONTENT -->
+        <div class="modal fade" id="resultsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Overall Results</h4>
+                    </div>
+                    <div class="modal-body" style='text-align: center'>
+                        <div id="resultsModalChart" style="width:75%; margin: 0 auto;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Instance Information</h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- END CONTAINER -->
     <!-- BEGIN FOOTER -->

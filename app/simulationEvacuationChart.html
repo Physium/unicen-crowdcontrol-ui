@@ -2,64 +2,10 @@
 
 
 //$.get(urlSingleRunData, function(result) {
-    //console.log(result.length);
+    console.log(simChartData.length);
     if (simChartData.length > 0) {
-
         google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'Percentile');
-            for (var i = 0; i < simChartData.length; i++) {
-                data.addColumn('number', 'Job ID ' + simChartData[i]['jobId']);
-            }
-
-
-            //obtain all results
-            var output = [];
-            for (var i = 0; i < JSON.parse(simChartData[0]['result'])['results'].length; i++) {
-                var arr = [];
-                arr.push((i + 1) * 5);
-                for (var j = 0; j < simChartData.length; j++) {
-                    arr.push(JSON.parse(simChartData[j]['result'])['results'][i]);
-                }
-
-                output.push(arr);
-            }
-
-            data.addRows(output);
-
-            //data.addColumn('number', 'Simulation ID');
-            /*var output = [];
-            //console.log(result);
-            for (var i = 0; i < result.length; i++) {
-                //console.log(result['results'][i]);
-                var arr = [];
-                //console.log(result);
-                arr.push(i + 1);
-                arr.push(result['results'][i]);
-                //console.log(arr);
-                output.push(arr);
-            }
-            data.addRows(output);*/
-
-            var options = {
-                title: 'Evacuation Time of Crowd',
-                vAxis: {
-                    title: 'Evacuation Time (sec)',
-
-                },
-                hAxis: {
-                    title: 'Percentile'
-                },
-                chartArea: {
-                    width: '50%'
-                }
-            };
-
-            var chart = new google.visualization.LineChart(document.getElementById('simulationEvacuationChart'));
-
-            chart.draw(data, options);
-        }
+        drawChart();
     } else {
         $("#simulationEvacuationChart").append("<h1>No past simulations</h1>");
     }
