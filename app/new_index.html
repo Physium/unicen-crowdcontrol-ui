@@ -1242,11 +1242,17 @@ License: You must have a valid license purchased only from themeforest(the above
                                         <!-- BEGIN FORM-->
                                         <form id="simulatorInputs" action="#">
                                             <div class="form-body">
-                                                <div id="building" class="form-group">
-                                                    <label class="control-label">Building:</label>
-                                                    <select class="js-example-basic-single form-control">
-                                                        <option value="SUNTEC-EXH">SUNTEC-EXH Building</option>
-                                                    </select>
+                                                <div class="row">
+                                                    <div id="building" class="col-md-6 form-group">
+                                                        <label class="control-label">Building:</label>
+                                                        <select class="js-example-basic-single form-control">
+                                                            <option value="SUNTEC-EXH">SUNTEC-EXH Building</option>
+                                                        </select>
+                                                    </div>
+                                                    <div id="agents" class="col-md-6 form-group">
+                                                        <label class="control-label">Agents:</label>
+                                                        <input class="form-control" type="number" min="1" pattern="number" value="1" />
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div id="run" class="col-md-4 form-group">
@@ -1297,6 +1303,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <hr>
                                                 <div id="singleRunParams">
                                                     <div class="row">
                                                         <div id="crowd" class="col-md-4 form-group">
