@@ -386,18 +386,18 @@ $(document).ready(function() {
         console.log(data);
         batchRunData = data;
         for (var i = 0; i < data.length; i++) {
-            var batchId = data[i]["batchId"];
-            var runs = data[i]["runs"]
-            var progress = currentProgress(data[i]["batch"], runs);
-            var avgResults = averageResult(data[i]["batch"]);
+            var batchId = data[i]['batchId'];
+            var runs = data[i]['runs']
+            var progress = currentProgress(data[i]['batch'], runs);
+            var avgResults = averageResult(data[i]['batch']);
 
 
-            var row1 = data[i]["batch"][0]["result"];
+            var row1 = data[i]['batch'][0]['result'];
             var row1Result = JSON.parse(row1);
-            $("#batchResults").append("<tr id='" + batchId + "'>" +
-                "<td class='batchId'>" + batchId + "</td><td class='progress'>" + Math.round(progress) + "%</td>" +
-                "<td class='runs'>" + runs + "</td><td><button id='result' data-toggle='modal' data-id='" + batchId + "' data-target='#resultsModal' class='btn btn-sm btn-success'>View Results</button></td>" +
-                "<td> <button data-toggle='modal' data-id='" + batchId + "' data-target='#myModal' class='btn btn-sm btn-success'>View</button></td></tr>");
+            $('#batchResults').append('<tr id=\'' + batchId + '\'>' +
+                '<td class=\'batchId\'>' + batchId + '</td><td class=\'progress\'>' + Math.round(progress) + '%</td>' +
+                '<td class=\'runs\'>' + runs + '</td><td><button id=\'result\' data-toggle=\'modal\' data-id=\'' + batchId + '\' data-target=\'#resultsModal\' class=\'btn btn-sm btn-success\'>View Results</button></td>' +
+                '<td> <button data-toggle=\'modal\' data-id=\'' + batchId + '\' data-target=\'#myModal\' class=\'btn btn-sm btn-success\'>View</button></td></tr>');
 
             /*console.log(avgResults.length);
             for(var j = 0; j < avgResults.length; j++){
@@ -444,10 +444,10 @@ $(document).ready(function() {
         console.log(data);
 
         for (var i = 0; i < data.length; i++) {
-            var jobId = data[i]["jobId"];
-            var instanceId = data[i]["instanceId"];
-            var instanceState = data[i]["instanceState"];
-            var result = JSON.parse(data[i]["result"])["results"];
+            var jobId = data[i]['jobId'];
+            var instanceId = data[i]['instanceId'];
+            var instanceState = data[i]['instanceState'];
+            var result = JSON.parse(data[i]['result'])['results'];
 
 
             //var progress = currentProgress(data[i]["batch"],runs);
@@ -456,10 +456,10 @@ $(document).ready(function() {
 
             //var row1 = data[i]["batch"][0]["result"];
             //var row1Result = JSON.parse(row1);
-            $("#singleResults").append("<tr id='" + jobId + "'>" +
-                "<td class='jobId'>" + jobId + "</td><td class='instanceId'>" + instanceId + "</td>" +
-                "<td class='instanceState'>" + instanceState + "</td><td><button id='result' data-toggle='modal' data-id='" + jobId + "' data-target='#singleResultsModal' class='btn btn-sm btn-success'>View Results</button></td>" +
-                "<td> <button data-toggle='modal' data-id='" + jobId + "' data-target='#singleParamModal' class='btn btn-sm btn-success'>View</button></td></tr>");
+            $('#singleResults').append('<tr id=\'' + jobId + '\'>' +
+                '<td class=\'jobId\'>' + jobId + '</td><td class=\'instanceId\'>' + instanceId + '</td>' +
+                '<td class=\'instanceState\'>' + instanceState + '</td><td><button id=\'result\' data-toggle=\'modal\' data-id=\'' + jobId + '\' data-target=\'#singleResultsModal\' class=\'btn btn-sm btn-success\'>View Results</button></td>' +
+                '<td> <button data-toggle=\'modal\' data-id=\'' + jobId + '\' data-target=\'#singleParamModal\' class=\'btn btn-sm btn-success\'>View</button></td></tr>');
 
             /*console.log(avgResults.length);
             for(var j = 0; j < avgResults.length; j++){
@@ -527,7 +527,7 @@ $(document).ready(function() {
             var button = $(event.relatedTarget);
             var jobId = button.data('id');
             var singleArr = getSingleRunDataInfo(jobId);
-            var result = JSON.parse(singleArr["result"])["results"];
+            var result = JSON.parse(singleArr['result'])['results'];
             console.log(result);
 
             var data = new google.visualization.DataTable();
@@ -574,7 +574,7 @@ $(document).ready(function() {
         var button = $(event.relatedTarget);
         var jobId = button.data('id');
         var singleArr = getSingleRunDataInfo(jobId);
-        var parameter = JSON.parse(singleArr["parameter"])
+        var parameter = JSON.parse(singleArr['parameter'])
 
         var building = parameter['building'];
         var location = parameter['location'];
@@ -587,12 +587,12 @@ $(document).ready(function() {
         var activatedAccess = parameter['activatedAccess'];
 
         var modal = $(this);
-        modal.find('.modal-body').html("<div><label> Buidling </label> : " + building + "</div>" +
-            "<div><label> Location </label> : " + location + "</div>" +
-            "<div><label> Time </label> : " + time + "</div>" +
-            "<div><label> Crowd </label> : " + crowd + "</div>" +
-            "<div><label> Information </label> : " + information + "</div>" +
-            "<div><label> Path </label> : " + path + "</div>");
+        modal.find('.modal-body').html('<div><label> Buidling </label> : ' + building + '</div>' +
+            '<div><label> Location </label> : ' + location + '</div>' +
+            '<div><label> Time </label> : ' + time + '</div>' +
+            '<div><label> Crowd </label> : ' + crowd + '</div>' +
+            '<div><label> Information </label> : ' + information + '</div>' +
+            '<div><label> Path </label> : ' + path + '</div>');
 
     });
 
@@ -603,13 +603,13 @@ $(document).ready(function() {
 
         var modal = $(this);
 
-        modal.find('.modal-body').html("<table id='instanceTable' style='table-layout:fixed' class='table table-bordered'>" +
-            "<tr><th>Job ID</th><th>Instance ID</th><th>Instance State</th></tr>" + "</table>");
+        modal.find('.modal-body').html('<table id=\'instanceTable\' style=\'table-layout:fixed\' class=\'table table-bordered\'>' +
+            '<tr><th>Job ID</th><th>Instance ID</th><th>Instance State</th></tr>' + '</table>');
         for (var i = 0; i < batchArr.length; i++) {
             var jobId = batchArr[i]['jobId'];
             var instanceId = batchArr[i]['instanceId'];
             var instanceState = batchArr[i]['instanceState'];
-            modal.find('#instanceTable').append("<tr><td>" + jobId + "</td><<td>" + instanceId + "</td><td>" + instanceState + "</td></tr>")
+            modal.find('#instanceTable').append('<tr><td>' + jobId + '</td><<td>' + instanceId + '</td><td>' + instanceState + '</td></tr>')
 
         }
 

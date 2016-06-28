@@ -61,14 +61,14 @@ var getSingleRunDataInfo = function(id) {
 //     }
 // })
 
-$("#marco").click(function(){
+$('#marco').click(function(){
     $('#batchRunParams').show();
     $('#detail').show();
     $('#marco').hide();
     $('#singleRunParams').hide();
 })
 
-$("#detail").click(function(){
+$('#detail').click(function(){
     $('#batchRunParams').hide();
     $('#detail').hide();
     $('#marco').show();
@@ -384,10 +384,10 @@ $(document).ready(function() {
         var modal = $(this);
         var runs = batchArr['runs'];
         var batch = batchArr['batch'];
-        console.log("test");
+        console.log('test');
         console.log(batchArr);
-        modal.find('.modal-body').html("<table id='instanceTable' style='table-layout:fixed' class='table table-bordered'>" +
-            "<tr><th>Job ID</th><th>Instance State</th></tr>" + "</table>");
+        modal.find('.modal-body').html('<table id=\'instanceTable\' style=\'table-layout:fixed\' class=\'table table-bordered\'>' +
+            '<tr><th>Job ID</th><th>Instance State</th></tr>' + '</table>');
 
         for (var i = 0; i < runs; i++) {
 
@@ -395,9 +395,9 @@ $(document).ready(function() {
                 var jobId = batch[i]['jobId'];
                 var instanceId = batch[i]['instanceId'];
                 var instanceState = batch[i]['instanceState'];
-                modal.find('#instanceTable').append("<tr><td>" + (i+1) + "</td><<td>" + instanceState + "</td></tr>")
+                modal.find('#instanceTable').append('<tr><td>' + (i+1) + '</td><<td>' + instanceState + '</td></tr>')
             }else{
-                modal.find('#instanceTable').append("<tr><td>" + (i+1) + "</td><<td>QUEUE</td></tr>")
+                modal.find('#instanceTable').append('<tr><td>' + (i+1) + '</td><<td>QUEUE</td></tr>')
             }
         }
 
@@ -513,7 +513,7 @@ window.operateEvents = {
 
         for(var i = 0; i < simChartData.length; i++){
             if(simChartData[i]['batchId'] == selectedId){
-                console.log("remove");
+                console.log('remove');
                 simChartData.splice(i,1);
                 break;
             }
@@ -522,7 +522,7 @@ window.operateEvents = {
         if(simChartData.length > 0){
             drawChart();
         }else{
-            $("#simulationEvacuationChart").html("<h1>No simulations results</h1>");
+            $('#simulationEvacuationChart').html('<h1>No simulations results</h1>');
         }
     }
 
@@ -531,7 +531,7 @@ window.operateEvents = {
 $('#clearSimulator').click(function(){
 
     simChartData = [];
-    $("#simulationEvacuationChart").html("<h1>No simulations results</h1>");
+    $('#simulationEvacuationChart').html('<h1>No simulations results</h1>');
 })
 
 function responseHandler(res){
