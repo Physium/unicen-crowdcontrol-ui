@@ -1203,7 +1203,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <div class="col-md-3">
                                 <!-- BEGIN WIDGET THUMB -->
                                 <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
-                                    <h4 class="widget-thumb-heading">Biggest Purchase</h4>
+                                    <h4 class="widget-thumb-heading">Number of Users</h4>
                                     <div class="widget-thumb-wrap">
                                         <i class="widget-thumb-icon bg-purple icon-screen-desktop"></i>
                                         <div class="widget-thumb-body">
@@ -1217,7 +1217,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <div class="col-md-3">
                                 <!-- BEGIN WIDGET THUMB -->
                                 <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
-                                    <h4 class="widget-thumb-heading">Average Monthly</h4>
+                                    <h4 class="widget-thumb-heading">Available Results</h4>
                                     <div class="widget-thumb-wrap">
                                         <i class="widget-thumb-icon bg-blue icon-bar-chart"></i>
                                         <div class="widget-thumb-body">
@@ -1303,7 +1303,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <hr>
+                                                <hr style="margin-bottom:0px">
+                                                <div style="margin:10px 0px">
+                                                    <small id="detail" class="font-green"> <a href="javascript:void(0)">Click Here For More Detailed Options</a></small>
+                                                    <small id="marco" class="font-green"> <a href="javascript:void(0)">Click Here For Marcos Options</a></small>
+                                                </div>
                                                 <div id="singleRunParams">
                                                     <div class="row">
                                                         <div id="crowd" class="col-md-4 form-group">
@@ -1455,11 +1459,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </div>
                                     </div>
                                     <div class="portlet-body">
-                                        <table id="table-result" data-toggle="table" data-height="552" data-search="true" data-response-handler="responseHandler" data-url="http://10.1.20.70:8080/SimulatorControl/?command=getAllBatchRunData">
+                                        <!-- <table id="table-result" data-toggle="table" data-height="552" data-search="true" data-response-handler="responseHandler" data-url="http://10.1.20.70:8080/SimulatorControl/?command=getAllBatchRunData"> -->
+                                        <table id="table-result" data-height="552" data-search="true">
                                             <thead>
                                                 <tr>
                                                     <th data-field="batchId" data-align="center" data-sortable="true">Batch ID</th>
-                                                    <th data-field="progress" data-formatter="test" data-align="center" data-sortable="true">Progress</th>
+                                                    <th data-field="progress" data-formatter="progress" data-align="center" data-sortable="true">Progress</th>
                                                     <th data-field="runs" data-sortable="true" data-sorter="priceSorter" data-align="center">Runs</th>
                                                     <th data-field="operate" data-formatter='operateFormatter' data-align="center" data-events="operateEvents">Actions
                                                     </th>
@@ -1540,7 +1545,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     <h2>About</h2>
                     <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam dolore. </p>
                 </div>
-                <!-- <div class="col-md-3 col-sm-6 col-xs12 footer-block">
+                <!--<div class="col-md-3 col-sm-6 col-xs12 footer-block">
                         <h2>Subscribe Email</h2>
                         <div class="subscribe-form">
                             <form action="javascript:;">

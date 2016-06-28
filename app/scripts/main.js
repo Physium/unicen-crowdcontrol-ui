@@ -27,7 +27,16 @@ var getBatchRunDataInfo = function(id) {
             return batchRunData[i]['batch'];
         }
     }
-    return 'ID not found';
+    return [];
+}
+
+var getBatchData = function(id) {
+    for (var i = 0; i < batchRunData.length; i++) {
+        if (batchRunData[i]['batchId'] == id) {
+            return batchRunData[i];
+        }
+    }
+    return [];
 }
 
 //obtain single run data base on store global
@@ -37,20 +46,35 @@ var getSingleRunDataInfo = function(id) {
             return singleRunData[i];
         }
     }
-    return 'ID not found';
+    return [];
 }
 
 //changes params
-$('#run input').on("change paste keyup",function(){
-    var noOfRuns = $(this).val();
-    if(noOfRuns > 1){
-        $('#batchRunParams').show();
-        $('#singleRunParams').hide();
-    }else{
-        $('#batchRunParams').hide();
-        $('#singleRunParams').show();
-    }
+// $('#run input').on("change paste keyup",function(){
+//     var noOfRuns = $(this).val();
+//     if(noOfRuns > 1){
+//         $('#batchRunParams').show();
+//         $('#singleRunParams').hide();
+//     }else{
+//         $('#batchRunParams').hide();
+//         $('#singleRunParams').show();
+//     }
+// })
+
+$("#marco").click(function(){
+    $('#batchRunParams').show();
+    $('#detail').show();
+    $('#marco').hide();
+    $('#singleRunParams').hide();
 })
+
+$("#detail").click(function(){
+    $('#batchRunParams').hide();
+    $('#detail').hide();
+    $('#marco').show();
+    $('#singleRunParams').show();
+})
+
 //simulation submit
 $('#simulationSubmit').click(function(){
 
@@ -58,6 +82,7 @@ $('#simulationSubmit').click(function(){
     //Single params
     var building = $('#building select').val();
     var run = $('#run input').val();
+    var agents = $('#agents input').val();
     var location = $('#location select').val();
     var time = $('#time input').val();
     var crowd = $('#crowd select').val();
@@ -66,6 +91,7 @@ $('#simulationSubmit').click(function(){
     var access = $('#access select').val();
     var information = $('#information select').val();
     var path = $('#path select').val();
+
     //Batch params
     var distribution = $('#distribution select').val();
     var disruption = $('#disruption select').val();
@@ -76,59 +102,142 @@ $('#simulationSubmit').click(function(){
 
     //test output printout
     console.log(JSON.stringify(output));
-    if(run > 1){
-        output['run'] = parseInt(run);
-        output['Distribution'] = distribution;
-        output['Disruption'] = disruption;
-        output['Strategy'] = strategy;
-
-
-    }else{
-        output['building'] = building;
-        output['location'] = location;
-        output['time'] = time;
-        output['crowd'] = crowd;
-        output['information'] = information;
-        output['path'] = path;
-        output['activatedLift'] = [];
-        output['activatedEscalator'] = [];
-        output['activatedAccess'] = [];
-        $('#escalator option').each(function() {
-            console.log($(this).val());
-            if (escalator) {
-                if (escalator.indexOf($(this).val()) == -1) {
-                    output['activatedEscalator'].push($(this).val());
-                }
-            } else {
+    // if(run > 1){
+    //     output['run'] = parseInt(run);
+    //     output['Distribution'] = distribution;
+    //     output['Disruption'] = disruption;
+    //     output['Strategy'] = strategy;
+    // }else{
+    output['run'] = parseInt(run);
+    output['agents'] = parseInt(agents);
+    output['building'] = building;
+    output['location'] = location;
+    output['time'] = time;
+    output['crowd'] = crowd;
+    output['information'] = information;
+    output['path'] = path;
+    output['activatedLift'] = [];
+    output['activatedEscalator'] = [];
+    output['activatedAccess'] = [];
+    //detailed options
+    $('#escalator option').each(function() {
+        console.log($(this).val());
+        if (escalator) {
+            if (escalator.indexOf($(this).val()) == -1) {
                 output['activatedEscalator'].push($(this).val());
             }
-        });
+        } else {
+            output['activatedEscalator'].push($(this).val());
+        }
+    });
 
-        $('#lift option').each(function() {
-            //console.log($(this).val());
-            if (lift) {
-                if (lift.indexOf($(this).val()) == -1) {
-                    output['activatedLift'].push($(this).val());
-                }
-            } else {
+    $('#lift option').each(function() {
+        //console.log($(this).val());
+        if (lift) {
+            if (lift.indexOf($(this).val()) == -1) {
                 output['activatedLift'].push($(this).val());
             }
-        });
+        } else {
+            output['activatedLift'].push($(this).val());
+        }
+    });
 
-        $('#access option').each(function() {
-            //console.log($(this).val());
-            if (access) {
-                if (access.indexOf($(this).val()) == -1) {
-                    output['activatedAccess'].push($(this).val());
-                }
-            } else {
+    $('#access option').each(function() {
+        //console.log($(this).val());
+        if (access) {
+            if (access.indexOf($(this).val()) == -1) {
                 output['activatedAccess'].push($(this).val());
             }
-        });
-        
+        } else {
+            output['activatedAccess'].push($(this).val());
+        }
+    });
+
+    //macro options
+    console.log($('#detail').is(':visible'));
+    if($('#detail').is(':visible')){
+        output['information'] = distribution;
+        switch(disruption){
+            case 'AllGreen':
+                    $('#escalator option').each(function() {
+                        output['activatedEscalator'].push($(this).val());
+                    });
+
+                    $('#lift option').each(function() {
+                        output['activatedLift'].push($(this).val());
+                    });
+
+                    $('#access option').each(function() {
+                        output['activatedAccess'].push($(this).val());
+                    });
+                break;
+            case 'FullDisruption':
+                    output['activatedEscalator'] = [];
+                    output['activatedLift'] = [];
+                    output['activatedAccess'] = [];
+                break;
+            case 'DoorWayDisrupted':
+                    output['activatedAccess'] = [];
+                    $('#escalator option').each(function() {
+                        output['activatedEscalator'].push($(this).val());
+                    });
+
+                    $('#lift option').each(function() {
+                        output['activatedLift'].push($(this).val());
+                    });
+                break;
+            case 'ElevatorsDisrupted':
+                    output['activatedLift'] = [];
+                    $('#escalator option').each(function() {
+                        output['activatedEscalator'].push($(this).val());
+                    });
+
+                    $('#access option').each(function() {
+                        output['activatedAccess'].push($(this).val());
+                    });
+                break;
+            case 'EscalatorsDisrupted':
+                    output['activatedEscalator'] = [];
+                    $('#lift option').each(function() {
+                        output['activatedLift'].push($(this).val());
+                    });
+
+                    $('#access option').each(function() {
+                        output['activatedAccess'].push($(this).val());
+                    });
+                break;
+        }
+
+        switch(strategy){
+            case 'PI-NB':
+                    output['information'] = 'PARTIAL';
+                    output['path'] = 'NAIVE';
+                break;
+            case 'PI-AB':
+                    output['information'] = 'PARTIAL';
+                    output['path'] = 'ADAPTIVE';
+                break;
+            case 'CI-NB':
+                    output['information'] = 'COMPLETE';
+                    output['path'] = 'NAIVE';
+                break;
+            case 'CI-AB':
+                    output['information'] = 'COMPLETE';
+                    output['path'] = 'ADAPTIVE';
+                break;
+            case 'PI-OT':
+                    output['information'] = 'PARTIAL';
+                    output['path'] = 'ONETIME';
+                break;
+        }
     }
-    console.log(output);
+    
+
+
+    console.log(JSON.stringify(output));
     var jsonOutput = JSON.stringify(output);
+
+    //send ajax request
     $.ajax({
         method: 'POST',
         url: urlStart,
@@ -137,7 +246,20 @@ $('#simulationSubmit').click(function(){
         //Show that this is done
         console.log(msg);
     });
+
+    //refresh table result on click
+    updateTable();
 });
+
+var updateTable = function(){
+    $.get(urlBatchRunData,function(data){
+
+        $('#table-result').bootstrapTable('load', {
+            data:responseHandler(data)
+        })
+        batchRunData = data;
+    })
+}
 
 var averageResult = function(batch) {
     var finalArr = [];
@@ -160,6 +282,21 @@ var averageResult = function(batch) {
 
 $(document).ready(function() {
 
+    //retrieve batch run data on load
+    var $table = $('#table-result');
+    $.get(urlBatchRunData,function(data){ 
+
+        //load bootstrap table       
+        $table.bootstrapTable({
+            data: responseHandler(data)
+        });
+
+        //temp store data
+        batchRunData = data;
+    })
+    
+
+
     //select2 elements
     $('.js-example-basic-single').select2();
 
@@ -168,6 +305,7 @@ $(document).ready(function() {
     
     //hide batch run params
     $('#batchRunParams').hide();
+    $('#detail').hide();
 
     //THIS IS HISTORY PAGE
     var currentProgress = function(batch, runs) {
@@ -184,7 +322,8 @@ $(document).ready(function() {
         return (currentProgress / runs) * 100;
     };
 
-    
+    //setInterval to obtain updates
+    setInterval(updateTable,5000);
 
     $('#resultsModal').on('show.bs.modal', function(event) {
 
@@ -240,27 +379,30 @@ $(document).ready(function() {
     $('#myModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
         var batchId = button.data('id');
-        var batchArr = getBatchRunDataInfo(batchId);
+        var batchArr = getBatchData(batchId);
 
         var modal = $(this);
-
+        var runs = batchArr['runs'];
+        var batch = batchArr['batch'];
+        console.log("test");
+        console.log(batchArr);
         modal.find('.modal-body').html("<table id='instanceTable' style='table-layout:fixed' class='table table-bordered'>" +
             "<tr><th>Job ID</th><th>Instance State</th></tr>" + "</table>");
-        for (var i = 0; i < batchArr.length; i++) {
-            var jobId = batchArr[i]['jobId'];
-            var instanceId = batchArr[i]['instanceId'];
-            var instanceState = batchArr[i]['instanceState'];
-            modal.find('#instanceTable').append("<tr><td>" + jobId + "</td><<td>" + instanceState + "</td></tr>")
 
+        for (var i = 0; i < runs; i++) {
+
+            if(batch[i]){
+                var jobId = batch[i]['jobId'];
+                var instanceId = batch[i]['instanceId'];
+                var instanceState = batch[i]['instanceState'];
+                modal.find('#instanceTable').append("<tr><td>" + (i+1) + "</td><<td>" + instanceState + "</td></tr>")
+            }else{
+                modal.find('#instanceTable').append("<tr><td>" + (i+1) + "</td><<td>QUEUE</td></tr>")
+            }
         }
 
 
     });
-
-    $.get(urlBatchRunData,function(data){
-        console.log(data);
-        batchRunData = data;
-    })
 
 })
 
@@ -300,7 +442,7 @@ function operateFormatter(value, row, index) {
     // return 'Results'
 }
 
-function test(value){
+function progress(value){
     console.log(value)
     return'<div class="dashboard-stat2" style="background:none;padding:0;"><div class="progress-info">'+
                         '<div class="progress">'+
@@ -393,6 +535,7 @@ $('#clearSimulator').click(function(){
 })
 
 function responseHandler(res){
+    console.log(res);
     var final = [];
     for(var i = 0; i < res.length; i++){
         var temp = {};
