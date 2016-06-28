@@ -1,0 +1,9 @@
+<script type="text/javascript">//$.get(urlSingleRunData, function(result) {
+    console.log(simChartData.length);
+    if (simChartData.length > 0) {
+        google.charts.setOnLoadCallback(drawChart);
+        drawChart();
+    } else {
+        $("#simulationEvacuationChart").append("<h1>No simulations results</h1>");
+    }
+//});</script><div id="simulationEvacuationChart" style="height:400px"></div>
