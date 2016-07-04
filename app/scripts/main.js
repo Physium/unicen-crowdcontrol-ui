@@ -1,7 +1,7 @@
-//google chart load
+//initialization of Google Chart
 google.charts.load('current', { 'packages': ['line', 'corechart'] });
 
-//list of endpoints
+//List of Endpoints
 var ipAddress = '10.1.20.70:8080'; //10.1.12.68
 var urlStatus = 'http://' + ipAddress + '/SimulatorControl/?command=status';
 var urlStart = 'http://' + ipAddress + '/SimulatorControl/?command=start';
@@ -9,18 +9,28 @@ var urlStop = 'http://' + ipAddress + '/SimulatorControl/?command=urlStop';
 var urlData = 'http://' + ipAddress + '/SimulatorControl/?command=getPercentileData';
 var urlSingleRunData = 'http://' + ipAddress + '/SimulatorControl/?command=getAllSingleRunData';
 var urlBatchRunData = 'http://' + ipAddress + '/SimulatorControl/?command=getAllBatchRunData';
+var urlGetAvailableInstance = 'http://' + ipAddress + '/SimulatorControl/?command=getAvailableInstance';
+var urlGetProgressInstance = 'http://' + ipAddress + '/SimulatorControl/?command=getProgressInstance';
 
-//global variable
+//Global Variables
 var batchRunData;
 var singleRunData;
 var simChartData = [];
 simChartData.push();
-//chart variable
+
+//Global Google Chart Variables
+//handles the constant updating of google chart
 var chart;
 var data;
 var options;
 
-//obtain individual batch run data base on store global
+//START OF GLOBAL FUNCTIONS
+/**
+ *Takes in a job id and returns the specific id batch results
+ *
+ *@param {string} id - The batch id of the batch run
+ *@return {array} - Only 'batch' param
+**/
 var getBatchRunDataInfo = function(id) {
     for (var i = 0; i < batchRunData.length; i++) {
         if (batchRunData[i]['batchId'] == id) {
@@ -30,6 +40,12 @@ var getBatchRunDataInfo = function(id) {
     return [];
 }
 
+/**
+ *Takes in a job id and returns the specific id FULL batch results
+ *
+ *@param {string} id - The batch id of the batch run
+ *@return {array} - The entire batch information
+**/
 var getBatchData = function(id) {
     for (var i = 0; i < batchRunData.length; i++) {
         if (batchRunData[i]['batchId'] == id) {
@@ -39,28 +55,87 @@ var getBatchData = function(id) {
     return [];
 }
 
-//obtain single run data base on store global
-var getSingleRunDataInfo = function(id) {
-    for (var i = 0; i < singleRunData.length; i++) {
-        if (singleRunData[i]['jobId'] == id) {
-            return singleRunData[i];
+/**
+ *Takes in a job id and returns the specific id FULL batch results
+ *
+ *@param {string} id - The batch id of the batch run
+ *@return {array} - The entire batch information
+**/
+var searchChartData = function(id){
+    for(var i = 0; i < simChartData.length; i++){
+        if(simChartData[i]['batchId'] == id){
+            console.log('found');
+            return true;
         }
     }
-    return [];
 }
 
-//changes params
-// $('#run input').on("change paste keyup",function(){
-//     var noOfRuns = $(this).val();
-//     if(noOfRuns > 1){
-//         $('#batchRunParams').show();
-//         $('#singleRunParams').hide();
-//     }else{
-//         $('#batchRunParams').hide();
-//         $('#singleRunParams').show();
-//     }
-// })
+/**
+ *Updates table results and global variable after retrieving data from specific endpoint
+ *
+**/
+var updateTable = function(){
+    //Send a ajax request to obtain all batch results
+    $.get(urlBatchRunData,function(data){
+        $('#table-result').bootstrapTable('load', {
+            data:responseHandler(data)
+        })
+        batchRunData = data;
+    })
+}
 
+/**
+ *Takes in 'batch' parameter and returns the average results
+ *
+ *@param {array} batch - 'batch' param of a specific batch
+ *@return {numbers} - average results of the batch
+**/
+var averageResult = function(batch) {
+    var finalArr = [];
+    var parseResult = JSON.parse(batch[0]['result']);
+    if (parseResult != null) {
+        for (var i = 0; i < parseResult['results'].length; i++) {
+            var temp = 0;
+            for (var j = 0; j < batch.length; j++) {
+                var parseTempResult = JSON.parse(batch[j]['result']);
+                if (parseTempResult != null) {
+                    //console.log(parseTempResult)
+                    temp = temp + parseTempResult['results'][i];
+                }
+            }
+            finalArr.push(temp / batch.length)
+        }
+    }
+    return finalArr;
+};
+
+/**
+ *Calculates the current progress of the simulation
+ *
+ *@param {array} batch - 'batch' param of a specific batch
+ *@param {number} runs - number of runs
+ *@return {numbers} - current progress of the batch
+**/
+var currentProgress = function(batch, runs) {
+    var currentProgress = 0;
+    var countFinishRuns = batch.length;
+    if (batch.length > 0) {
+        for (var i = 0; i < batch.length; i++) {
+            if (batch[i]['instanceState'] == 'FINISHED') {
+                currentProgress = currentProgress + 1;
+            }
+        }
+    }
+    //console.log(currentProgress)
+    return Math.round((currentProgress / runs) * 100);
+};
+//END OF GLOBAL FUNCTIONS
+
+//START OF CLICK(S) EVENT HANLDERS
+/**
+ *Click event handler for switching parameter input options to 'detailed' view
+ *
+**/
 $('#marco').click(function(){
     $('#batchRunParams').show();
     $('#detail').show();
@@ -68,6 +143,10 @@ $('#marco').click(function(){
     $('#singleRunParams').hide();
 })
 
+/**
+ *Click event handler for switching parameter input options to 'marco' view
+ *
+**/
 $('#detail').click(function(){
     $('#batchRunParams').hide();
     $('#detail').hide();
@@ -75,10 +154,22 @@ $('#detail').click(function(){
     $('#singleRunParams').show();
 })
 
-//simulation submit
+/**
+ *Event handler that clears all simulation results
+ *
+**/
+$('#clearSimulator').click(function(){
+    simChartData = [];
+    $('#simulationEvacuationChart').html('<h1>No simulations results</h1>');
+})
+
+/**
+ *Click event handler for submitting simulation configurations selections
+ *
+**/
 $('#simulationSubmit').click(function(){
 
-    //obtaining input variables
+    //Obtaining simulation parameters input variables
     //Single params
     var building = $('#building select').val();
     var run = $('#run input').val();
@@ -96,18 +187,11 @@ $('#simulationSubmit').click(function(){
     var distribution = $('#distribution select').val();
     var disruption = $('#disruption select').val();
     var strategy = $('#strategy select').val();
-    //
-    var output = {};
     
+    //Output final variable
+    var output = {};
 
-    //test output printout
-    console.log(JSON.stringify(output));
-    // if(run > 1){
-    //     output['run'] = parseInt(run);
-    //     output['Distribution'] = distribution;
-    //     output['Disruption'] = disruption;
-    //     output['Strategy'] = strategy;
-    // }else{
+    //Packing simulation variables inputs in required JSON format
     output['run'] = parseInt(run);
     output['agents'] = parseInt(agents);
     output['building'] = building;
@@ -119,7 +203,8 @@ $('#simulationSubmit').click(function(){
     output['activatedLift'] = [];
     output['activatedEscalator'] = [];
     output['activatedAccess'] = [];
-    //detailed options
+    
+    //This handles the processing of DETAILED inputs into desired format
     $('#escalator option').each(function() {
         console.log($(this).val());
         if (escalator) {
@@ -153,8 +238,7 @@ $('#simulationSubmit').click(function(){
         }
     });
 
-    //macro options
-    console.log($('#detail').is(':visible'));
+    //This handles the processing of MARCO inputs into desired format
     if($('#detail').is(':visible')){
         output['information'] = distribution;
         switch(disruption){
@@ -233,11 +317,12 @@ $('#simulationSubmit').click(function(){
     }
     
 
-
+    //Printing of final output variable for debugging purposes
     console.log(JSON.stringify(output));
+    //Converting array into JSON string format
     var jsonOutput = JSON.stringify(output);
 
-    //send ajax request
+    //Sending of JSON simulation parameters to the 'start' endpoint
     $.ajax({
         method: 'POST',
         url: urlStart,
@@ -247,84 +332,67 @@ $('#simulationSubmit').click(function(){
         console.log(msg);
     });
 
-    //refresh table result on click
+    //Loads table with new data upon submission
     updateTable();
 });
+//END OF CLICK(S) EVENT HANDLER
 
-var updateTable = function(){
-    $.get(urlBatchRunData,function(data){
+//The below are preloaded syncronous data before document ready to allow countup plugin to work
+$.ajax({
+  method: 'GET',
+  url: urlBatchRunData,
+  async:false
+}).done(function( data ) {
+    $('#widgetResults').attr('data-value',data.length);
+});
 
-        $('#table-result').bootstrapTable('load', {
-            data:responseHandler(data)
-        })
-        batchRunData = data;
-    })
-}
+$.ajax({
+  method: 'GET',
+  url: urlGetProgressInstance,
+  async:false
+}).done(function( data ) {
+    console.log(data);
+    $('#widgetProgress').attr('data-value',data.length);
+});
 
-var averageResult = function(batch) {
-    var finalArr = [];
-    var parseResult = JSON.parse(batch[0]['result']);
-    if (parseResult != null) {
-        for (var i = 0; i < parseResult['results'].length; i++) {
-            var temp = 0;
-            for (var j = 0; j < batch.length; j++) {
-                var parseTempResult = JSON.parse(batch[j]['result']);
-                if (parseTempResult != null) {
-                    //console.log(parseTempResult)
-                    temp = temp + parseTempResult['results'][i];
-                }
-            }
-            finalArr.push(temp / batch.length)
-        }
-    }
-    return finalArr;
-};
+$.ajax({
+  method: 'GET',
+  url: urlGetAvailableInstance,
+  async:false
+}).done(function( data ) {
+    $('#widgetAvailable').attr('data-value',data.length);
+});
 
+
+/**
+ *START OF DOCUMENT READY FUNCTION
+ *Document ready function handles functions/events to be called only after the page has succesfully been fully loaded
+ *
+*/
 $(document).ready(function() {
-
-    //retrieve batch run data on load
-    var $table = $('#table-result');
-    $.get(urlBatchRunData,function(data){ 
-
-        //load bootstrap table       
-        $table.bootstrapTable({
-            data: responseHandler(data)
-        });
-
-        //temp store data
-        batchRunData = data;
-    })
     
 
+    //Bootstrap table initalization
+    $('#table-result').bootstrapTable();
 
-    //select2 elements
+    ///Loads table with new data upon submission
+    updateTable();
+
+    //Set interval to poll updates every 5 seconds
+    setInterval(updateTable,5000);
+
+    //Select 2 initalization
     $('.js-example-basic-single').select2();
 
-    //initial load
+    //Initial loading of Simulation Chart
     $('#simulation').load('simulationEvacuationChart.html');
     
-    //hide batch run params
+    //Initial hiding of all marco elements
     $('#batchRunParams').hide();
     $('#detail').hide();
 
-    //THIS IS HISTORY PAGE
-    var currentProgress = function(batch, runs) {
-        var currentProgress = 0;
-        var countFinishRuns = batch.length;
-        if (batch.length > 0) {
-            for (var i = 0; i < batch.length; i++) {
-                if (batch[i]['instanceState'] == 'FINISHED') {
-                    currentProgress = currentProgress + 1;
-                }
-            }
-        }
-        //console.log(currentProgress)
-        return (currentProgress / runs) * 100;
-    };
-
-    //setInterval to obtain updates
-    setInterval(updateTable,5000);
-
+    
+    //Handles what to show on results modal on click
     $('#resultsModal').on('show.bs.modal', function(event) {
 
         google.charts.setOnLoadCallback(drawChart);
@@ -334,25 +402,27 @@ $(document).ready(function() {
             var batchId = button.data('id');
             var batchArr = getBatchRunDataInfo(batchId);
             console.log(batchArr);
-            var avgResults = averageResult(batchArr);
-            console.log(avgResults)
+            
 
             var data = new google.visualization.DataTable();
             data.addColumn('number', 'Percentile');
             data.addColumn('number', batchId);
             var output = [];
             //console.log(result);
-            for (var i = 0; i < avgResults.length; i++) {
-                //console.log(result['results'][i]);
-                var arr = [];
-                //console.log(result);
-                arr.push((i + 1) * 5);
-                arr.push(avgResults[i]);
-                //console.log(arr);
-                output.push(arr);
+            if(batchArr.length > 0){
+                var avgResults = averageResult(batchArr);
+                console.log(avgResults)
+                for (var i = 0; i < avgResults.length; i++) {
+                    //console.log(result['results'][i]);
+                    var arr = [];
+                    //console.log(result);
+                    arr.push((i + 1) * 5);
+                    arr.push(avgResults[i]);
+                    //console.log(arr);
+                    output.push(arr);
+                }
+                data.addRows(output);
             }
-            data.addRows(output);
-
             var options = {
                 title: 'Evacuation Time of Crowd',
                 width: '100%',
@@ -376,7 +446,9 @@ $(document).ready(function() {
         }
     });
 
-    $('#myModal').on('show.bs.modal', function(event) {
+    //Handles what to show on statusModal on click
+    $('#statusModal').on('show.bs.modal', function(event) {
+        console.log('status')
         var button = $(event.relatedTarget);
         var batchId = button.data('id');
         var batchArr = getBatchData(batchId);
@@ -384,7 +456,7 @@ $(document).ready(function() {
         var modal = $(this);
         var runs = batchArr['runs'];
         var batch = batchArr['batch'];
-        console.log('test');
+        //console.log('test');
         console.log(batchArr);
         modal.find('.modal-body').html('<table id=\'instanceTable\' style=\'table-layout:fixed\' class=\'table table-bordered\'>' +
             '<tr><th>Job ID</th><th>Instance State</th></tr>' + '</table>');
@@ -405,43 +477,61 @@ $(document).ready(function() {
     });
 
 })
+//END OF DOCUMENT READY FUNCTION
 
 
-var currentProgress = function(batch, runs) {
-    var currentProgress = 0;
-    var countFinishRuns = batch.length;
-    if (batch.length > 0) {
-        for (var i = 0; i < batch.length; i++) {
-            if (batch[i]['instanceState'] == 'FINISHED') {
-                currentProgress = currentProgress + 1;
-            }
-        }
-    }
-    //console.log(currentProgress)
-    return (currentProgress / runs) * 100;
-};
+//THE FOLLOWING FUNCTIONS BELOW ARE API(s) WHICH BELONG TO BOOTSTRAP TABLE FOR CUSTOMIZATION
 
+/**
+ *Formats the "Action" table column
+ *
+ *@param {string} value - the field value
+ *@param {object} row - the row record data
+ *@param {string} index - the row index
+ *@return {string} - html
+**/
 function operateFormatter(value, row, index) {
-    return [
-        '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#resultsModal" class="like ml10" title="Results">',
-            '<i class="fa fa-bar-chart-o"></i>',
-        '</a>',
-        '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#myModal" class="like ml10" title="Results">',
-            '<i class="fa fa-search"></i>',
-        '</a>',
-        '<a class="edit ml10 '+row['batchId']+'" href="javascript:void(0)" title="Compare">',
-            '<i class="fa fa-plus"></i>',
-        '</a>',
-        '<a class="remove ml10 '+row['batchId']+'" href="javascript:void(0)" title="Remove" style="display:none">',
-            '<i class="fa fa-minus"></i>',
-        '</a>'
-    ].join('');
-    // console.log(value);
-    // console.log(row);
-    // console.log(index);
-    // return 'Results'
+
+    if(!searchChartData(row['batchId'])){
+        return [
+            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#resultsModal" class="like ml10" title="Results">',
+                '<i class="fa fa-bar-chart-o"></i>',
+            '</a>',
+            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#statusModal" class="like ml10" title="Status">',
+                '<i class="fa fa-search"></i>',
+            '</a>',
+            '<a class="edit ml10 '+row['batchId']+'" href="javascript:void(0)" title="Compare">',
+                '<i class="fa fa-plus"></i>',
+            '</a>',
+            '<a class="remove ml10 '+row['batchId']+'" href="javascript:void(0)" title="Remove" style="display:none">',
+                '<i class="fa fa-minus"></i>',
+            '</a>'
+        ].join('');
+    }else{
+        return [
+            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#resultsModal" class="like ml10" title="Results">',
+                '<i class="fa fa-bar-chart-o"></i>',
+            '</a>',
+            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#statusModal" class="like ml10" title="Status">',
+                '<i class="fa fa-search"></i>',
+            '</a>',
+            '<a class="edit ml10 '+row['batchId']+'" href="javascript:void(0)" title="Compare" style="display:none">',
+                '<i class="fa fa-plus"></i>',
+            '</a>',
+            '<a class="remove ml10 '+row['batchId']+'" href="javascript:void(0)" title="Remove">',
+                '<i class="fa fa-minus"></i>',
+            '</a>'
+        ].join('');
+    }
 }
 
+
+/**
+ *Formats the "Progress" table column
+ *
+ *@param {string} value - the field value
+ *@return {string} - html
+**/
 function progress(value){
     console.log(value)
     return'<div class="dashboard-stat2" style="background:none;padding:0;"><div class="progress-info">'+
@@ -455,8 +545,22 @@ function progress(value){
                                 '<div class="status-number">'+value+'% </div>'+
                         '</div>'+
                     '</div></div>';
-    //return testValue;
 }
+
+
+
+
+
+//
+/**
+ *Handles the click events within the "Actions" column
+ *
+ *@param {string} event - the jQuery event
+ *@param {string} value - he field value
+ *@param {object} row - the row record data
+ *@param {number} index - the row index
+ *@return {string} - html
+**/
 
 window.operateEvents = {
     'click .like': function (e, value, row, index) {
@@ -469,18 +573,6 @@ window.operateEvents = {
         
         console.log(row['batchId']);
         var selectedId = row['batchId'];
-
-        // if($('.edit.'+selectedId).is(":visible")){
-        //     $('.edit.'+selectedId).hide();
-        // }else{
-        //     $('.edit.'+selectedId).show();
-        // }
-        
-        // if($('.remove.'+selectedId).is(":visible")){
-        //     $('.remove.'+selectedId).hide();
-        // }else{
-        //     $('.remove.'+selectedId).show();
-        // }
         
         $(this).hide();
         $('.remove.'+selectedId).show();
@@ -528,12 +620,12 @@ window.operateEvents = {
 
 };
 
-$('#clearSimulator').click(function(){
-
-    simChartData = [];
-    $('#simulationEvacuationChart').html('<h1>No simulations results</h1>');
-})
-
+/**
+ *Before load remote data, handle the response data format
+ *
+ *@param {object} res - the response data
+ *@return {object}
+ **/
 function responseHandler(res){
     console.log(res);
     var final = [];
@@ -546,8 +638,12 @@ function responseHandler(res){
     }
     return final;
 };
+//END OF BOOTSTRAP TABLE FUNCTIONS
 
-//draw the evacuation chart for comparison
+/**
+ *Draw method for google chart
+ *
+**/
 function drawChart() {
     data = new google.visualization.DataTable();
     data.addColumn('number', 'Percentile');
