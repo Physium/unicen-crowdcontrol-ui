@@ -8,14 +8,14 @@ Raw project was generated with [yo webapp generator](https://github.com/yeoman/g
 
 ## Installation
 
-1. Ensure latest [node.js](https://nodejs.org/en/download/) is installed to get access to 'npm'
-2. Install dependecies: 'npm install -g bower gulp-cli'
-3. Run 'npm install' to install node modules
-4. run 'bower install' to install frontend dependecies
+1. Ensure latest [node.js](https://nodejs.org/en/download/) is installed to get access to `npm`
+2. Install dependecies: `npm install -g bower gulp-cli`
+3. Run `npm install` to install node modules
+4. run `bower install` to install frontend dependecies
 
 
 ## Usage
 
-1. Run 'gulp serve' for preview
-2. Run 'gulp build' to build your webapp for production
-3. Run 'gulp serve:dist' to preview the production build
+1. Run `gulp serve` for preview
+2. Run `gulp build` to build your webapp for production
+3. Run `gulp serve:dist` to preview the production build
