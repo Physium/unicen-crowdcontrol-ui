@@ -156,7 +156,8 @@
 * **Success Response:**
 
   * **Code:** 200
-  * 
+
+
 **Get Last Request**
 ----
   Returns the last request command of the instance. There are 3 different status: START, STOP, FINISHED
