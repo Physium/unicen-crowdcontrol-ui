@@ -26,4 +26,4 @@ Since we are only using elements within the dist folder for production, the foll
 
 1. Upon making any changes, run `gulp build` to rebuild your webapp for production
 2. `git add dist -f && git commit -m "<messages>"` to commit all changes to dist folder
-3. 'git subtree push --prefix dist origin gh-pages'
+3. `git subtree push --prefix dist origin gh-pages`
