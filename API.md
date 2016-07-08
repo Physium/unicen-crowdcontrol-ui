@@ -60,6 +60,7 @@
   * **Code:** 200 <br />
     **Content:** `{"message":"Batch Mode Complete. Batch ID: <id>"}`
 
+
  **Get All Simulation Results**
 ----
   Returns an array of simulation results
@@ -107,7 +108,7 @@
     ]
     ``` 
 
-    
+
 **Get Simulation Status**
 ----
   Returns the status of the web server status
