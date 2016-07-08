@@ -106,6 +106,8 @@
       }
     ]
     ``` 
+
+    
 **Get Simulation Status**
 ----
   Returns the status of the web server status
