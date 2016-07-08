@@ -61,7 +61,7 @@
     **Content:** `{"message":"Batch Mode Complete. Batch ID: <id>"}`
 
 
- **Get All Simulation Results**
+**Get All Simulation Results**
 ----
   Returns an array of simulation results
 
