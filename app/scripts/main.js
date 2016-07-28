@@ -1,6 +1,8 @@
 //initialization of Google Chart
 google.charts.load('current', { 'packages': ['line', 'corechart'] });
 
+//
+
 //List of Endpoints
 var ipAddress = '10.1.20.70:8080'; //10.1.12.68
 var urlStatus = 'http://' + ipAddress + '/SimulatorControl/?command=status';
@@ -183,11 +185,22 @@ $('#simulationSubmit').click(function(){
     var information = $('#information select').val();
     var path = $('#path select').val();
 
+    var young = parseInt($("#young input").val());
+    var adult = parseInt($("#adult input").val());
+    var elder = parseInt($("#elder input").val());
+
     //Batch params
     var distribution = $('#distribution select').val();
     var disruption = $('#disruption select').val();
     var strategy = $('#strategy select').val();
     
+    var ageProfile = {
+        "YOUNG":(young/parseInt(agents)).toFixed(2),
+        "ADULT":(adult/parseInt(agents)).toFixed(2),
+        "ELDER":(elder/parseInt(agents)).toFixed(2)
+    }
+    console.log(ageProfile);
+
     //Output final variable
     var output = {};
 
@@ -203,6 +216,9 @@ $('#simulationSubmit').click(function(){
     output['activatedLift'] = [];
     output['activatedEscalator'] = [];
     output['activatedAccess'] = [];
+    output['ageProfile'] = ageProfile;
+
+
     
     //This handles the processing of DETAILED inputs into desired format
     $('#escalator option').each(function() {
@@ -335,7 +351,28 @@ $('#simulationSubmit').click(function(){
     //Loads table with new data upon submission
     updateTable();
 });
+
+var updateTotalAgents = function(){
+
+    var young = parseInt($("#young input").val());
+    var adult = parseInt($("#adult input").val());
+    var elder = parseInt($("#elder input").val());
+
+    $("#agents input").val(young + adult + elder)
+}
 //END OF CLICK(S) EVENT HANDLER
+$("#young input").change(function(){
+    updateTotalAgents();
+});
+
+$("#adult input").change(function(){
+    updateTotalAgents();
+});
+
+$("#elder input").change(function(){
+    updateTotalAgents();
+});
+
 
 //The below are preloaded syncronous data before document ready to allow countup plugin to work
 $.ajax({
@@ -371,7 +408,9 @@ $.ajax({
 */
 $(document).ready(function() {
     
+    //$('#images').viewer('show').viewer('view',1);
 
+    //console.log(viewer);
     //Bootstrap table initalization
     $('#table-result').bootstrapTable();
 
@@ -476,9 +515,55 @@ $(document).ready(function() {
 
     });
 
+    //handles what to show on paramModal
+    $('#paramModal').on('show.bs.modal', function(event) {
+        console.log('status')
+        var button = $(event.relatedTarget);
+        var batchId = button.data('id');
+        var batchArr = getBatchData(batchId);
+
+        var modal = $(this);
+        var runs = batchArr['runs'];
+        console.log(batchArr);
+        var param = JSON.parse(batchArr['batch'][0]['parameter']);
+        //console.log('test');
+        console.log(batchArr);
+        var tableArr = [
+            '<div style="padding:5px 5px 5px 5px;"><table class="table-bordered">',
+                '<tr>',
+                    '<th>Runs</th><td>'+param['run']+'</td>',
+                '</tr>',
+                '<tr>',
+                    '<th>Agents</th><td>'+param['agents']+'</td>',
+                '</tr>',
+                '<tr>',
+                    '<th>Start Time</th><td>'+param['time']+'</td>',
+                '</tr>',
+                '<tr>',
+                    '<th>Crowd</th><td>'+param['crowd']+'</td>',
+                '</tr>',
+                '<tr>',
+                    '<th>Information</th><td>'+param['information']+'</td>',
+                '</tr>',
+                '<tr>',
+                    '<th>Path</th><td>'+param['path']+'</td>',
+                '</tr>',
+                '<tr>',
+                    '<th>Activated Lift</th><td>'+param['activatedLift']+'</td>',
+                '</tr>',
+                '<tr>',
+                    '<th>Activated Escalator</th><td>'+param['activatedEscalator']+'</td>',
+                '</tr>',
+                '<tr>',
+                    '<th>Activated Access Point</th><td>'+param['activatedAccess']+'</td>',
+                '</tr>',
+            '</table></div>'
+        ].join('');
+        modal.find('.modal-body').html(tableArr);
+    });
+
 })
 //END OF DOCUMENT READY FUNCTION
-
 
 //THE FOLLOWING FUNCTIONS BELOW ARE API(s) WHICH BELONG TO BOOTSTRAP TABLE FOR CUSTOMIZATION
 
@@ -494,10 +579,10 @@ function operateFormatter(value, row, index) {
 
     if(!searchChartData(row['batchId'])){
         return [
-            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#resultsModal" class="like ml10" title="Results">',
-                '<i class="fa fa-bar-chart-o"></i>',
+            '<a id="imageView" data-id="'+row['batchId']+'" class="like ml10" title="Snapshots">',
+                '<i class="fa fa-file-image-o"></i>',
             '</a>',
-            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#statusModal" class="like ml10" title="Status">',
+            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#statusModal" class=" ml10" title="Status">',
                 '<i class="fa fa-search"></i>',
             '</a>',
             '<a class="edit ml10 '+row['batchId']+'" href="javascript:void(0)" title="Compare">',
@@ -509,10 +594,10 @@ function operateFormatter(value, row, index) {
         ].join('');
     }else{
         return [
-            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#resultsModal" class="like ml10" title="Results">',
-                '<i class="fa fa-bar-chart-o"></i>',
+            '<a id="imageView" data-id="'+row['batchId']+'" class="like ml10" title="Snapshots">',
+                '<i class="fa fa-file-image-o"></i>',
             '</a>',
-            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#statusModal" class="like ml10" title="Status">',
+            '<a data-toggle="modal" data-id="'+row['batchId']+'" data-target="#statusModal" class=" ml10" title="Status">',
                 '<i class="fa fa-search"></i>',
             '</a>',
             '<a class="edit ml10 '+row['batchId']+'" href="javascript:void(0)" title="Compare" style="display:none">',
@@ -565,6 +650,8 @@ function progress(value){
 window.operateEvents = {
     'click .like': function (e, value, row, index) {
         //alert('You click like icon, row: ' + JSON.stringify(row));
+        //console.log($("#images"));
+        $('#images').viewer('show');
         console.log(value, row, index);
     },
     'click .edit': function (e, value, row, index) {
@@ -580,12 +667,14 @@ window.operateEvents = {
         for (var i = 0; i < batchRunData.length; i++) {
             if (batchRunData[i]['batchId'] == selectedId) {
                 //var avgResults = averageResult(batchRunData[i]['batchId']);
+                var final = new Array();
                 var batchArr = getBatchRunDataInfo(batchRunData[i]['batchId']);
                 //console.log(batchId);
                 var avgResults = averageResult(batchArr);
-                batchArr['results'] = avgResults;
-                batchArr['batchId'] = batchRunData[i]['batchId'];
-                simChartData.push(batchArr);
+                final['batch'] = batchArr;
+                final['results'] = avgResults;
+                final['batchId'] = batchRunData[i]['batchId'];
+                simChartData.push(final);
 
                 console.log(batchArr);
             }
@@ -650,19 +739,26 @@ function drawChart() {
     console.log(simChartData);
     for (var i = 0; i < simChartData.length; i++) {
         data.addColumn('number', 'ID ' + simChartData[i]['batchId']);
+        data.addColumn({'type':'string','role':'tooltip','p':{'html':true}});
     }
-
+    //data.addColumn({'type':'string','role':'tooltip','p':{'html':true}});
 
     //obtain all results
     var output = [];
+    //obtains the length of the total results length
     for (var i = 0; i < simChartData[0]['results'].length; i++) {
         var arr = [];
-        arr.push((i + 1) * 5);
+        var tooltip = [];
+        var percentile = (i + 1) * 5;
+        arr.push(percentile);
+        //
         for (var j = 0; j < simChartData.length; j++) {
             arr.push(simChartData[j]['results'][i]);
+            arr.push(createCustomHTMLContent(simChartData[j],simChartData[j]['results'][i],percentile));
         }
-
+        //arr.push(createCustomHTMLContent(simChartData[i]));
         output.push(arr);
+
     }
 
     data.addRows(output);
@@ -678,11 +774,84 @@ function drawChart() {
         },
         chartArea: {
             width: '50%'
+        },
+        //tooltip: {isHtml: true}
+        tooltip: {
+            isHtml:true,
+            trigger:'both'
         }
     };
 
     chart = new google.visualization.LineChart(document.getElementById('simulationEvacuationChart'));
-
+    // chart.setAction({
+    //     id:'parameter',
+    //     text:'Show Parameters',
+    //     action: function(){
+    //         console.log(chart.getSelection());
+    //     }
+    // });
     chart.draw(data, options);
 }
-
+function createCustomHTMLContent(batch,value,percentile){
+    console.log(batch);
+    console.log("hi");
+    var param = JSON.parse(batch['batch'][0]['parameter']);
+    return [
+    '<div style="padding:5px 5px 5px 5px;"><table class="table-bordered">',
+        '<tr>',
+            '<th>Evacuation Time</th><td>'+value+'</td>',
+        '</tr>',
+        '<tr>',
+            '<th>Percentile</th><td>'+percentile+'</td>',
+        '</tr>',
+    '</table>',
+    '<div>',
+        '<a data-toggle="modal" data-id="'+batch['batch'][0]['batchId']+'" data-target="#paramModal" title="Parameter">',
+            'Parameter Values',
+        '</a>',
+    '</div>',
+    '</div>'
+    ].join('');
+}
+// function createCustomHTMLContent(batch,value,percentile){
+//     console.log(batch);
+//     console.log("hi");
+//     var param = JSON.parse(batch['batch'][0]['parameter']);
+//     return [
+//     '<div style="padding:5px 5px 5px 5px;"><table class="table-bordered">',
+//         '<tr>',
+//             '<th>Evacuation Time</th><td>'+value+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Percentile</th><td>'+percentile+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Runs</th><td>'+param['run']+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Agents</th><td>'+param['agents']+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Start Time</th><td>'+param['time']+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Crowd</th><td>'+param['crowd']+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Information</th><td>'+param['information']+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Path</th><td>'+param['path']+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Activated Lift</th><td>'+param['activatedLift']+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Activated Escalator</th><td>'+param['activatedEscalator']+'</td>',
+//         '</tr>',
+//         '<tr>',
+//             '<th>Activated Access Point</th><td>'+param['activatedAccess']+'</td>',
+//         '</tr>',
+//     '</table></div>'
+//     ].join('');
+// }

@@ -1,0 +1,410 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>unicern</title>
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap-table/src/bootstrap-table.css" />
+    <link rel="stylesheet" href="/bower_components/imageviewer/dist/viewer.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="/bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+</head>
+
+<body>
+    <!--[if lt IE 10]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <!-- <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+        <h3 class="text-muted">unicern</h3>
+    </div>
+    <div class="container">
+        <div class="row marketing">
+            Threejs placeholder
+        </div>
+    </div>
+    <div class="footer">
+        <p>♥ from the Yeoman team</p>
+    </div> -->
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+    (function(b, o, i, l, e, r) {
+        b.GoogleAnalyticsObject = l;
+        b[l] || (b[l] =
+            function() {
+                (b[l].q = b[l].q || []).push(arguments)
+            });
+        b[l].l = +new Date;
+        e = o.createElement(i);
+        r = o.getElementsByTagName(i)[0];
+        e.src = 'https://www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e, r)
+    }(window, document, 'script', 'ga'));
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+    </script>
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/select2/dist/js/select2.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
+    <script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/bower_components/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="/bower_components/three.js/build/three.js"></script>
+    <script src="/bower_components/imageviewer/dist/viewer.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js scripts/plugins.js -->
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+    <!-- endbuild -->
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
+    <script src="http://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <script>
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+    var mouse = new THREE.Vector2();
+    var raycaster;
+    var INTERSECTED;
+    var controls;
+    var radius, theta = 0;
+
+    var renderer = new THREE.WebGLRenderer();
+    var particleMaterial = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        fog: true
+    });
+    var floors;
+    $.ajax({
+      method: 'GET',
+      url: 'floor.json',
+      async:false
+    }).done(function( data ) {
+        //console.log(data);
+        floors = data;
+    });
+
+    var stairs;
+    $.ajax({
+      method: 'GET',
+      url: 'stairs.json',
+      async:false
+    }).done(function( data ) {
+        //console.log(data);
+        stairs = data;
+    });
+
+
+    console.log(floors);
+    raycaster = new THREE.Raycaster();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xf0f0f0);
+    document.body.appendChild(renderer.domElement);
+    var light = new THREE.DirectionalLight(0xffffff, 1.5);
+    light.position.set(1, 1, 1).normalize();
+    scene.add(light);
+    //var geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+    // texture = THREE.ImageUtils.loadTexture('images/buildingId~SUNTEC-EXH_floorIdx~5.png');
+
+    // texture.wrapS = THREE.RepeatWrapping;
+    // texture.wrapT = THREE.RepeatWrapping;
+    // console.log(texture);
+    // var geometry = new THREE.PlaneGeometry(200,200);
+    // var material = new THREE.MeshBasicMaterial({
+    //     //color: 0x00ff00,
+    //     map: texture,
+    //     transparent: true,
+    //     //side: THREE.DoubleSide
+    // });
+    // var cube = new THREE.Mesh(geometry, material);
+    // cube.material.side = THREE.DoubleSide;
+    // console.log(cube.material);
+    // scene.add(cube);
+    function recalculateCoords(leftX, rightX, topY, downY) {
+        //var new
+        var height = 255;
+        var width = 305;
+
+        var newLeftX = leftX - (width / 2);
+        var newTopY = -(topY - (height / 2));
+        var newRightX = rightX - (width / 2);
+        var newDownY = -(downY - (height / 2));
+
+        return {'leftX': newLeftX,'topY':newTopY,'rightX':newRightX,'downY':newDownY}
+    }
+
+    var generateText = function(text,coords,z) {
+        var loader = new THREE.FontLoader();
+        loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
+
+            var textGeo = new THREE.TextGeometry(text, {
+                font: font,
+                size: 6,
+                height: 1,
+                curveSegments: 12,
+
+            });
+            var textMaterial = new THREE.MeshPhongMaterial({
+                color: 0xff0000
+            });
+
+            var mesh = new THREE.Mesh(textGeo, textMaterial);
+
+            var leftX = coords['leftX'];
+            var rightX = coords['rightX'];
+            var topY = coords['topY'];
+            var downY = coords['downY'];
+
+            var newCoords = recalculateCoords(leftX, rightX, topY, downY);
+            mesh.position.x = newCoords['leftX'];
+            mesh.position.y = newCoords['downY'];
+            mesh.position.z = z * 50;
+            //console.log(mesh);
+            scene.add(mesh);
+        })
+    }
+    var retrieveRooms = function(floor){
+        console.log(floor);
+        for(var i = 0; i < floors.length; i++){
+            if(floors[i]["floor"] == floor){
+                return floors[i];
+            }
+        }
+        return null;
+    }
+
+    var retrieveStairs = function(floor){
+        var results = new Array();
+        for(var i = 0; i < stairs.length; i++){
+            if((stairs[i]['from'] == floor) || (stairs[i]['to'] == floor)){
+                results.push(stairs[i]);
+            }
+        }
+        return results;
+    }
+    for (var i = 0; i < 6; i++) {
+        var texture = new THREE.TextureLoader().load('images/buildingId~SUNTEC-EXH_floorIdx~' + i + '.png');
+        texture.minFilter = THREE.LinearFilter;
+        var image = new Image;
+        image.src = 'images/buildingId~SUNTEC-EXH_floorIdx~' + i + '.png';
+
+        //console.log(image);
+        var geometry = new THREE.PlaneGeometry(305, 255);
+        var material = new THREE.MeshLambertMaterial({
+            //color: 0x00ff00,
+            map: texture,
+            transparent: true,
+        });
+
+        var cube = new THREE.Mesh(geometry, material);
+        // image.onload = function(){
+        //     console.log('helo');
+        //     cube.scale.x = this.width;
+        //     cube.scale.y = this.height;
+        // }
+
+        cube.material.side = THREE.DoubleSide;
+        cube.position.z = i * 50;
+        console.log(cube);
+        scene.add(cube);
+
+        var rooms = retrieveRooms(i);
+        console.log(rooms);
+        if(rooms){
+            for(var f = 0; f < rooms['room'].length; f++){
+                //console.log(rooms['room'][f]);
+                var coords = {
+                    'leftX' : rooms['room'][f]['rectLeftX'],
+                    'rightX' : rooms['room'][f]['rectRightX'],
+                    'topY' : rooms['room'][f]['rectTopY'],
+                    'downY' : rooms['room'][f]['rectDownY']
+                };
+                generateText(rooms['room'][f]['id'],coords,i);
+            }
+        }
+
+        var stairs = retrieveStairs(i);
+        console.log('stairs');
+        console.log(stairs);
+    }
+
+    // var loader = new THREE.FontLoader();
+
+    // loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
+
+    //     var textGeo = new THREE.TextGeometry("601-602", {
+    //         font: font,
+    //         size: 8,
+    //         height: 1,
+    //         curveSegments: 12,
+
+    //     });
+
+    //     var textMaterial = new THREE.MeshPhongMaterial({
+    //         color: 0xff0000
+    //     });
+
+    //     var mesh = new THREE.Mesh(textGeo, textMaterial);
+    //     //mesh.position.set( x, y, z );
+    //     var rectLeftX = 206 - 305 / 2;
+    //     var rectTopY = -(82 - 255 / 2);
+    //     var rectRightX = 302 - 305 / 2;
+    //     var rectDownY = -(200 - 255 / 2);
+    //     mesh.position.x = rectLeftX
+    //     mesh.position.z = 250;
+    //     console.log("text");
+    //     mesh.geometry.computeBoundingBox();
+    //     console.log(mesh);
+
+    //     scene.add(mesh);
+
+    // });
+    //camera.position.z = 400;
+    camera.position.set(0, -300, 450);
+    camera.up = new THREE.Vector3(0, 0, 1);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    //controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true;
+    //console.log(camera);
+
+    var render = function() {
+        requestAnimationFrame(render);
+        //
+        controls.update(); // required if controls.enableDamping = true, or if controls.autoRotate = true
+        raycaster.setFromCamera(mouse, camera);
+        var intersects = raycaster.intersectObjects(scene.children);
+        //console.log(intersects);
+        if (intersects.length > 0) {
+            if (INTERSECTED != intersects[0].object) {
+                if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+                INTERSECTED = intersects[0].object;
+                //console.log(INTERSECTED.material.emissive.getHex());
+                INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+                INTERSECTED.material.emissive.setHex(0xff0000);
+            }
+        } else {
+            //console.log(INTERSECTED.material.emissive.getHex());
+            if (INTERSECTED) {
+                //console.log(INTERSECTED);
+                INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+            }
+            INTERSECTED = null;
+        }
+        // cube.rotation.x -= 0.01;
+        // cube.rotation.z += 0.01;
+        // cube.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+    };
+    document.addEventListener('mousedown', onDocumentMouseDown, false);
+    document.addEventListener('mousemove', onDocumentMouseMove, false);
+    document.addEventListener('touchstart', onDocumentTouchStart, false);
+
+    function onDocumentTouchStart(event) {
+
+        event.preventDefault();
+
+        event.clientX = event.touches[0].clientX;
+        event.clientY = event.touches[0].clientY;
+        onDocumentMouseDown(event);
+
+    }
+
+    function onDocumentMouseDown(event) {
+        console.log(event);
+        event.preventDefault();
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        console.log(mouse);
+        raycaster.setFromCamera(mouse, camera);
+        var intersects = raycaster.intersectObjects(scene.children, true);
+        if (intersects.length > 0) {
+            console.log(intersects[0].point);
+            //intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
+            var rectLeftX = 206 - 305 / 2;
+            var rectTopY = -(82 - 255 / 2);
+            var rectRightX = 302 - 305 / 2;
+            var rectDownY = -(200 - 255 / 2);
+
+
+
+            var geometry = new THREE.BoxBufferGeometry(10, 10, 10);
+            var material = new THREE.MeshLambertMaterial({
+                color: 0x99FF66
+            });
+            mesh = new THREE.Mesh(geometry, material);
+            mesh.position.x = intersects[0].point.x;
+            mesh.position.y = intersects[0].point.y;
+            mesh.position.z = intersects[0].point.z * 1;
+            console.log(((intersects[0].point.x > rectLeftX && intersects[0].point.x < rectRightX) && (intersects[0].point.y < rectTopY && intersects[0].point.y > rectDownY)));
+            console.log("left x : " + rectLeftX);
+            console.log("top y : " + rectTopY);
+            console.log("right x : " + rectRightX);
+            console.log("down y : " + rectDownY);
+            if ((intersects[0].point.x > rectLeftX && intersects[0].point.x < rectRightX) && (intersects[0].point.y < rectTopY && intersects[0].point.y > rectDownY)) {
+                console.log('601-602');
+                //scene.add(mesh);
+            }
+
+        }
+    }
+
+    function onDocumentMouseMove(event) {
+        //console.log(event);
+        event.preventDefault();
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    }    
+
+    // function checkArea(x,y){
+    //     var rectLeftX = 206 - 305 / 2;
+    //     var rectTopY = -(82 - 255 / 2);
+    //     var rectRightX = 302 - 305 / 2;
+    //     var rectDownY = -(200 - 255 / 2);
+    //     if ((x > rectLeftX && x < rectRightX) && (y < rectTopY && y > rectDownY)) {
+    //             console.log('601-602');
+    //             //scene.add(mesh);
+    //     }else if{
+
+    //     }
+    // }
+            //
+    render();
+    </script>
+</body>
+
+</html>

@@ -6,7 +6,9 @@
     "modernizr": "~2.8.1",
     "select2": "^4.0.2",
     "eonasdan-bootstrap-datetimepicker": "^4.17.37",
-    "bootstrap-table": "^1.10.1"
+    "bootstrap-table": "^1.10.1",
+    "three.js": "threejs#*",
+    "imageviewer": "^0.5.1"
   },
   "overrides": {
     "bootstrap-sass": {
