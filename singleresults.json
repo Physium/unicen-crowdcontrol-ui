@@ -1,22 +1,60 @@
 [
   {
-    "instanceId": "277628412",
-    "instanceState": "FINISHED",
-    "instanceProcessId": "11940",
-    "jobId": "1465382292654",
-    "result": "{\"interval\":5,\"results\":[133.2,241.2,318.0,331.4,339.2,346.6,353.4,386.0,410.0,424.4,431.0,440.8,451.4,461.0,466.0,482.2,505.2,535.6,551.6,567.8]}",
-    "parameter": "{\"building\":\"SUNTEC-EXH\",\"location\":\"601-602\",\"time\":\"15:05\",\"crowd\":\"RANDOM\",\"information\":\"PARTIAL\",\"path\":\"SUNTEC-EXH\",\"activatedLift\":[\"Lift 2 @ Floor 0\",\"Lift 3 @ Floor 0\",\"Lift 4 @ Floor 0\",\"Lift 5 @ Floor 0\",\"Lift 6 @ Floor 0\"],\"activatedEscalator\":[\"Stair id 1 @ level 0\",\"Stair id 2 @ level 0\",\"Stair id 3 @ level 0\",\"Stair id 0 @ level 2\",\"Stair id 1 @ level 2\",\"Stair id 2 @ level 2\",\"Stair id 3 @ level 2\",\"Stair id 4 @ level 2\",\"Stair id 5 @ level 2\",\"Stair id 6 @ level 2\",\"Stair id 7 @ level 2\",\"Stair id 8 @ level 2\",\"Stair id 9 @ level 2\",\"Stair id 0 @ level 3\",\"Stair id 1 @ level 3\",\"Stair id 2 @ level 3\",\"Stair id 3 @ level 3\",\"Stair id 4 @ level 3\",\"Stair id 5 @ level 3\",\"Stair id 0 @ level 5\",\"Stair id 1 @ level 5\"],\"activatedAccess\":[\"Door 1 @ Floor 2\"]}",
-    "batchId": null,
-    "lastRequestCommand": "start"
+    "batchId": "1466406998444",
+    "runs": 1,
+    "batch": [
+      {
+        "instanceId": "277628412",
+        "instanceState": "FINISHED",
+        "instanceProcessId": "15160",
+        "jobId": "1466406992619",
+        "result": "{\"interval\":5,\"results\":[133.2,246.2,325.2,329.8,338.4,346.2,356.8,372.2,395.0,406.2,421.0,437.0,451.4,460.8,476.6,488.8,504.2,536.8,556.4,567.0]}",
+        "parameter": "{\"building\":\"SUNTEC-EXH\",\"location\":\"601-602\",\"time\":\"15:05\",\"crowd\":\"RANDOM\",\"information\":\"PARTIAL\",\"path\":\"SUNTEC-EXH\",\"activatedLift\":[\"Lift 2 @ Floor 0\",\"Lift 3 @ Floor 0\",\"Lift 4 @ Floor 0\",\"Lift 5 @ Floor 0\",\"Lift 6 @ Floor 0\"],\"activatedEscalator\":[\"Stair id 0 @ level 0\",\"Stair id 2 @ level 0\",\"Stair id 3 @ level 0\",\"Stair id 0 @ level 2\",\"Stair id 1 @ level 2\",\"Stair id 2 @ level 2\",\"Stair id 3 @ level 2\",\"Stair id 4 @ level 2\",\"Stair id 5 @ level 2\",\"Stair id 6 @ level 2\",\"Stair id 7 @ level 2\",\"Stair id 8 @ level 2\",\"Stair id 9 @ level 2\",\"Stair id 0 @ level 3\",\"Stair id 1 @ level 3\",\"Stair id 2 @ level 3\",\"Stair id 3 @ level 3\",\"Stair id 4 @ level 3\",\"Stair id 5 @ level 3\",\"Stair id 0 @ level 5\",\"Stair id 1 @ level 5\"],\"activatedAccess\":[\"Door 1 @ Floor 2\"]}",
+        "batchId": "1466406998444",
+        "lastRequestCommand": "start"
+      }
+    ]
   },
   {
-    "instanceId": "277628412",
-    "instanceState": "FINISHED",
-    "instanceProcessId": "10496",
-    "jobId": "1465382292694",
-    "result": "{\"interval\":5,\"results\":[133.4,241.4,118.2,331.6,339.4,346.8,353.6,386.2,410.2,424.6,431.2,441.0,451.6,461.2,466.2,482.4,505.4,535.8,551.8,568.0]}",
-    "parameter": "{\"building\":\"SUNTEC-EXH\",\"location\":\"601-602\",\"time\":\"15:05\",\"crowd\":\"RANDOM\",\"information\":\"PARTIAL\",\"path\":\"SUNTEC-EXH\",\"activatedLift\":[\"Lift 2 @ Floor 0\",\"Lift 3 @ Floor 0\",\"Lift 4 @ Floor 0\",\"Lift 5 @ Floor 0\",\"Lift 6 @ Floor 0\"],\"activatedEscalator\":[\"Stair id 1 @ level 0\",\"Stair id 2 @ level 0\",\"Stair id 3 @ level 0\",\"Stair id 0 @ level 2\",\"Stair id 1 @ level 2\",\"Stair id 2 @ level 2\",\"Stair id 3 @ level 2\",\"Stair id 4 @ level 2\",\"Stair id 5 @ level 2\",\"Stair id 6 @ level 2\",\"Stair id 7 @ level 2\",\"Stair id 8 @ level 2\",\"Stair id 9 @ level 2\",\"Stair id 0 @ level 3\",\"Stair id 1 @ level 3\",\"Stair id 2 @ level 3\",\"Stair id 3 @ level 3\",\"Stair id 4 @ level 3\",\"Stair id 5 @ level 3\",\"Stair id 0 @ level 5\",\"Stair id 1 @ level 5\"],\"activatedAccess\":[\"Door 1 @ Floor 2\"]}",
-    "batchId": null,
-    "lastRequestCommand": "start"
+    "batchId": "1466408476228",
+    "runs": 1,
+    "batch": [
+      {
+        "instanceId": "277628412",
+        "instanceState": "FINISHED",
+        "instanceProcessId": "6116",
+        "jobId": "1466407037122",
+        "result": "{\"interval\":5,\"results\":[133.2,270.0,343.2,359.4,369.4,381.8,404.0,434.8,446.4,452.2,460.6,466.4,478.2,490.8,505.4,518.8,524.4,533.8,554.4,569.4]}",
+        "parameter": "{\"building\":\"SUNTEC-EXH\",\"location\":\"601-602\",\"time\":\"15:05\",\"crowd\":\"RANDOM\",\"information\":\"PARTIAL\",\"path\":\"SUNTEC-EXH\",\"activatedLift\":[\"Lift 1 @ Floor 0\",\"Lift 3 @ Floor 0\",\"Lift 5 @ Floor 0\"],\"activatedEscalator\":[\"Stair id 3 @ level 0\",\"Stair id 0 @ level 2\",\"Stair id 1 @ level 2\",\"Stair id 2 @ level 2\",\"Stair id 3 @ level 2\",\"Stair id 4 @ level 2\",\"Stair id 5 @ level 2\",\"Stair id 6 @ level 2\",\"Stair id 7 @ level 2\",\"Stair id 8 @ level 2\",\"Stair id 9 @ level 2\",\"Stair id 0 @ level 3\",\"Stair id 1 @ level 3\",\"Stair id 2 @ level 3\",\"Stair id 3 @ level 3\",\"Stair id 4 @ level 3\",\"Stair id 5 @ level 3\",\"Stair id 0 @ level 5\",\"Stair id 1 @ level 5\"],\"activatedAccess\":[\"Door 1 @ Floor 2\"]}",
+        "batchId": "1466408476228",
+        "lastRequestCommand": "start"
+      }
+    ]
+  },
+  {
+    "batchId": "1466408536103",
+    "runs": 2,
+    "batch": [
+      {
+        "instanceId": "277628412",
+        "instanceState": "FINISHED",
+        "instanceProcessId": "15076",
+        "jobId": "1466408521428",
+        "result": "{\"interval\":5,\"results\":[150.4,156.4,161.6,165.8,171.2,176.8,181.2,183.6,187.6,193.0,197.6,201.6,204.8,208.4,211.8,214.8,217.2,220.4,223.6,226.0]}",
+        "parameter": "{\"run\":2,\"Distribution\":\"AllLevelsAllModes\",\"Disruption\":\"AllGreen\",\"Strategy\":\"PI-NB\"}",
+        "batchId": "1466408536103",
+        "lastRequestCommand": "start"
+      },
+      {
+        "instanceId": "277628412",
+        "instanceState": "FINISHED",
+        "instanceProcessId": "14032",
+        "jobId": "1466408789134",
+        "result": "{\"interval\":5,\"results\":[150.6,156.6,161.8,166.0,171.4,177.0,181.4,183.8,187.8,193.2,197.8,201.8,205.0,208.6,212.0,215.0,217.4,220.6,223.8,226.2]}",
+        "parameter": "{\"run\":2,\"Distribution\":\"AllLevelsAllModes\",\"Disruption\":\"AllGreen\",\"Strategy\":\"PI-NB\"}",
+        "batchId": "1466408536103",
+        "lastRequestCommand": "start"
+      }
+    ]
   }
 ]
