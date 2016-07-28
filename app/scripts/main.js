@@ -185,9 +185,9 @@ $('#simulationSubmit').click(function(){
     var information = $('#information select').val();
     var path = $('#path select').val();
 
-    var young = parseInt($("#young input").val());
-    var adult = parseInt($("#adult input").val());
-    var elder = parseInt($("#elder input").val());
+    var young = parseInt($('#young input').val());
+    var adult = parseInt($('#adult input').val());
+    var elder = parseInt($('#elder input').val());
 
     //Batch params
     var distribution = $('#distribution select').val();
@@ -195,9 +195,9 @@ $('#simulationSubmit').click(function(){
     var strategy = $('#strategy select').val();
     
     var ageProfile = {
-        "YOUNG":(young/parseInt(agents)).toFixed(2),
-        "ADULT":(adult/parseInt(agents)).toFixed(2),
-        "ELDER":(elder/parseInt(agents)).toFixed(2)
+        'YOUNG':(young/parseInt(agents)).toFixed(2),
+        'ADULT':(adult/parseInt(agents)).toFixed(2),
+        'ELDER':(elder/parseInt(agents)).toFixed(2)
     }
     console.log(ageProfile);
 
@@ -354,22 +354,22 @@ $('#simulationSubmit').click(function(){
 
 var updateTotalAgents = function(){
 
-    var young = parseInt($("#young input").val());
-    var adult = parseInt($("#adult input").val());
-    var elder = parseInt($("#elder input").val());
+    var young = parseInt($('#young input').val());
+    var adult = parseInt($('#adult input').val());
+    var elder = parseInt($('#elder input').val());
 
-    $("#agents input").val(young + adult + elder)
+    $('#agents input').val(young + adult + elder)
 }
 //END OF CLICK(S) EVENT HANDLER
-$("#young input").change(function(){
+$('#young input').change(function(){
     updateTotalAgents();
 });
 
-$("#adult input").change(function(){
+$('#adult input').change(function(){
     updateTotalAgents();
 });
 
-$("#elder input").change(function(){
+$('#elder input').change(function(){
     updateTotalAgents();
 });
 
@@ -794,7 +794,7 @@ function drawChart() {
 }
 function createCustomHTMLContent(batch,value,percentile){
     console.log(batch);
-    console.log("hi");
+    console.log('hi');
     var param = JSON.parse(batch['batch'][0]['parameter']);
     return [
     '<div style="padding:5px 5px 5px 5px;"><table class="table-bordered">',

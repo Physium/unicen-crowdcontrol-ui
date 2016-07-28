@@ -9,10 +9,11 @@ Raw project was generated with [yo webapp generator](https://github.com/yeoman/g
 ## Installation
 
 1. Ensure latest [node.js](https://nodejs.org/en/download/) is installed to get access to `npm`
-2. Install dependecies: `npm install -g bower gulp-cli`
-3. Run `npm install` to install node modules
-4. run `bower install` to install frontend dependecies
-
+2. Install global npm dependecies: `npm install -g bower gulp-cli`
+3. Enter the application root directory
+4. Run `npm install` to install node modules
+5. Run `bower install` to install frontend dependecies
+6. Run 'gulp serve' to ensure everything is up and running perfectly
 
 ## Usage
 
@@ -21,6 +22,11 @@ Raw project was generated with [yo webapp generator](https://github.com/yeoman/g
 3. Run `gulp serve:dist` to preview the production build
 
 ## Workflow
+
+All development work is to be done in the `develop branch`.
+* `new_index.html` is the main page
+* `scripts/main.js` consist of the main client side logic
+
 
 Since we are only using elements within the dist folder for production, the following is steps on how to ensure changes are being committed and updated into the gh-pages branch.
 
