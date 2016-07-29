@@ -221,6 +221,7 @@ $('#simulationSubmit').click(function(){
 
     
     //This handles the processing of DETAILED inputs into desired format
+    //switching the logic from deactivated to activated
     $('#escalator option').each(function() {
         console.log($(this).val());
         if (escalator) {
@@ -651,13 +652,14 @@ window.operateEvents = {
     'click .like': function (e, value, row, index) {
         //alert('You click like icon, row: ' + JSON.stringify(row));
         //console.log($("#images"));
+        //This launches the screenshot function
         $('#images').viewer('show');
         console.log(value, row, index);
     },
     'click .edit': function (e, value, row, index) {
         // alert('You click edit icon, row: ' + JSON.stringify(row));
         // console.log(value, row, index);
-        
+        // This is invoke when the + sign is clicked
         console.log(row['batchId']);
         var selectedId = row['batchId'];
         
@@ -671,6 +673,7 @@ window.operateEvents = {
                 var batchArr = getBatchRunDataInfo(batchRunData[i]['batchId']);
                 //console.log(batchId);
                 var avgResults = averageResult(batchArr);
+                //storing the result locally (in memory)
                 final['batch'] = batchArr;
                 final['results'] = avgResults;
                 final['batchId'] = batchRunData[i]['batchId'];
@@ -682,6 +685,7 @@ window.operateEvents = {
 
         console.log(simChartData);
 
+        //drawChart uses simChartData to draw the graphs
         drawChart();
        
     },
@@ -763,6 +767,7 @@ function drawChart() {
 
     data.addRows(output);
 
+    //this is the option of the chart
     options = {
         title: 'Evacuation Time of Crowd',
         vAxis: {
@@ -776,6 +781,7 @@ function drawChart() {
             width: '50%'
         },
         //tooltip: {isHtml: true}
+        //this is view the experiment configuration when cursor is over the plot
         tooltip: {
             isHtml:true,
             trigger:'both'
@@ -792,6 +798,8 @@ function drawChart() {
     // });
     chart.draw(data, options);
 }
+
+//This displays the configuration information of the graphs
 function createCustomHTMLContent(batch,value,percentile){
     console.log(batch);
     console.log('hi');
