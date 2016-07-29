@@ -41,10 +41,11 @@
         color: 0xffffff,
         fog: true
     });
+    //This is the logical component
     var floors;
     $.ajax({
       method: 'GET',
-      url: 'floor.json',
+      url: 'floor.json', //this is a mock up, expect to get it from server
       async:false
     }).done(function( data ) {
         //console.log(data);
@@ -54,13 +55,13 @@
     var stairs;
     $.ajax({
       method: 'GET',
-      url: 'stairs.json',
+      url: 'stairs.json', //this is a mock up, expect to get it from server
       async:false
     }).done(function( data ) {
         //console.log(data);
         stairs = data;
     });
-
+    //end of logical component
 
     console.log(floors);
     raycaster = new THREE.Raycaster();
@@ -87,6 +88,7 @@
     // cube.material.side = THREE.DoubleSide;
     // console.log(cube.material);
     // scene.add(cube);
+    //shift the origin coords from the top left to the center ofthe plane
     function recalculateCoords(leftX, rightX, topY, downY) {
         //var new
         var height = 255;
@@ -149,6 +151,8 @@
         }
         return results;
     }
+
+    //paste texture to the plane
     for (var i = 0; i < 6; i++) {
         var texture = new THREE.TextureLoader().load('images/buildingId~SUNTEC-EXH_floorIdx~' + i + '.png');
         texture.minFilter = THREE.LinearFilter;
@@ -156,6 +160,7 @@
         image.src = 'images/buildingId~SUNTEC-EXH_floorIdx~' + i + '.png';
 
         //console.log(image);
+        //manually derived dimension - dimension of the floor may change at different levels
         var geometry = new THREE.PlaneGeometry(305, 255);
         var material = new THREE.MeshLambertMaterial({
             //color: 0x00ff00,
@@ -163,6 +168,7 @@
             transparent: true,
         });
 
+        //top level object of the floor space
         var cube = new THREE.Mesh(geometry, material);
         // image.onload = function(){
         //     console.log('helo');
@@ -171,6 +177,7 @@
         // }
 
         cube.material.side = THREE.DoubleSide;
+        //to make sure the plane dont stack on top of each other
         cube.position.z = i * 50;
         console.log(cube);
         scene.add(cube);
@@ -186,10 +193,12 @@
                     'topY' : rooms['room'][f]['rectTopY'],
                     'downY' : rooms['room'][f]['rectDownY']
                 };
+                //generate text does the mapping of the raw coordinates to the coordinates of the 3d interface
                 generateText(rooms['room'][f]['id'],coords,i);
             }
         }
 
+        // add code to map the stairs
         var stairs = retrieveStairs(i);
         console.log('stairs');
         console.log(stairs);
